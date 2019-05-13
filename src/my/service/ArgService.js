@@ -17,7 +17,7 @@ export function setArg(step, name, value, isLiteral = true) {
     } else {
         step.data[name] = {
             isLiteral,
-            value:'',
+            value:value,
         };
     }
     return step;

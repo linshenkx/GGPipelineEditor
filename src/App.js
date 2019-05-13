@@ -39,7 +39,6 @@ function App() {
       y: 55,
       id: 'ea1184e8',
       index: 0,
-      myProps: { name: '', shell: '' }
     }, {
       type: 'node',
       size: '70*70',
@@ -50,7 +49,6 @@ function App() {
       y: 255,
       id: '481fbb1a',
       index: 2,
-      myProps: { name: '', shell: '' }
     }],
     edges: [{
       source: 'ea1184e8',
@@ -103,7 +101,6 @@ function App() {
             model={{
               color: '#FA8C16',
               label: '自定义节点1',
-              myProps: { name: '', shell: '' }
             }}
           />
           <Item
@@ -113,7 +110,6 @@ function App() {
             model={{
               color: '#FA8C16',
               label: '自定义节点2',
-              myProps: { name: '', shell: '' }
             }}
             src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
           />
@@ -124,7 +120,6 @@ function App() {
             model={{
               color: '#FA8C16',
               label: '自定义节点3',
-              myProps: { name: '', shell: '' }
             }}
             src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
           />
@@ -135,7 +130,6 @@ function App() {
             model={{
               color: '#FA8C16',
               label: '自定义节点4',
-              myProps: { name: '', shell: '' }
             }}
             src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
           />

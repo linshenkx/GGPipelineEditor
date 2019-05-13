@@ -7,7 +7,6 @@ import 'antd/dist/antd.css';
 import { Input } from 'antd';
 
 import Button from 'antd/lib/button';
-import idgen from "../../service/IdGenerator";
 import {getDefaultStep} from "../../util/StepUtil"
 const { TextArea } = Input;
 
@@ -18,8 +17,10 @@ class ScriptStepEditor extends React.Component {
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
         let {model}=item;
-        let {step}=model.myProps;
-        if(!step){
+        let step;
+        if(model.myProps&&model.myProps.step){
+            step=model.myProps.step;
+        }else {
             step=getDefaultStep();
         }
 
@@ -40,14 +41,14 @@ class ScriptStepEditor extends React.Component {
         let {myProps}=model;
         if(myProps && myProps.step){
             return  myProps.step;
-        }else {
-            return getDefaultStep();
         }
     }
 
     setStepToModel(model,step){
-        let {myProps}=model;
-        myProps.step=step;
+        if(!model.myProps){
+            model.myProps={};
+        }
+        model.myProps.step=step;
         return model;
     }
 
@@ -58,6 +59,9 @@ class ScriptStepEditor extends React.Component {
         let item=propsAPI.getSelected()[0];
         let {model}=item;
         let step=this.getStepFromModel(model);
+        if(!step){
+            step=getDefaultStep();
+        }
 
         return <div>
             <div className="name">name:
@@ -79,7 +83,6 @@ class ScriptStepEditor extends React.Component {
                     className="editor-step-detail-script"
                     defaultValue={getArg(step,"arg1").value}
                     onChange={e => this.textChanged("arg1",e.target.value)}
-
                     rows={2}
                 />
             </div>
