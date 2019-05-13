@@ -35,6 +35,8 @@ class ScriptStepEditor extends React.Component {
 
         model=this.setStepToModel(model,step);
         propsAPI.update(item,model);
+
+        this.props.onChange(step);
     };
 
     getStepFromModel(model){
