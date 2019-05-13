@@ -20,4 +20,5 @@ export function setArg(step, name, value, isLiteral = true) {
             value:'',
         };
     }
+    return step;
 }

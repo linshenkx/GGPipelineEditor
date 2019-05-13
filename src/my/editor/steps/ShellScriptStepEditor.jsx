@@ -7,39 +7,80 @@ import 'antd/dist/antd.css';
 import { Input } from 'antd';
 
 import Button from 'antd/lib/button';
+import idgen from "../../service/IdGenerator";
+import {getDefaultStep} from "../../util/StepUtil"
 const { TextArea } = Input;
 
 class ScriptStepEditor extends React.Component {
-    componentDidMount() {
+
+
+    textChanged = (name,targetValue) => {
         const { propsAPI } = this.props;
-        console.log(propsAPI);
+        let item=propsAPI.getSelected()[0];
+        let {model}=item;
+        let {step}=model.myProps;
+        if(!step){
+            step=getDefaultStep();
+        }
+
+        switch (name) {
+            case "name":
+                step.name=targetValue;break;
+            case "label":
+                step.label=targetValue;break;
+            default:
+                step=setArg(step,name,targetValue);
+        }
+
+        model=this.setStepToModel(model,step);
+        propsAPI.update(item,model);
+    };
+
+    getStepFromModel(model){
+        let {myProps}=model;
+        if(myProps && myProps.step){
+            return  myProps.step;
+        }else {
+            return getDefaultStep();
+        }
     }
-    
-    textChanged = script => {
-        setArg(this.props.step, 'script', script);
-        this.props.onChange(this.props.step);
-        //console.log(this.item.model);
-    };
-    nameChanged = name => {
-        setArg(this.props.step, 'name', name);
-        this.props.onChange(this.props.step);
-    };
+
+    setStepToModel(model,step){
+        let {myProps}=model;
+        myProps.step=step;
+        return model;
+    }
+
+
     render() {
-        const { step } = this.props;
-        console.log("render:step:" + step);
+
+        const { propsAPI } = this.props;
+        let item=propsAPI.getSelected()[0];
+        let {model}=item;
+        let step=this.getStepFromModel(model);
 
         return <div>
-            <div className="name">name:<TextArea rows={2}
+            <div className="name">name:
+                <TextArea rows={2}
                 className="editor-step-detail-name"
-                defaultValue={getArg(step, 'name').value}
-                onChange={e => this.nameChanged(e.target.value)} /></div>
-            <div>shell
+                defaultValue={step.name}
+                onChange={e => this.textChanged("name",e.target.value)} />
+            </div>
+            <div>label
                 <TextArea
                     className="editor-step-detail-script"
-                    defaultValue={getArg(step, 'script').value}
-                    onChange={e => this.textChanged(e.target.value)}
+                    defaultValue={step.label}
+                    onChange={e => this.textChanged("label",e.target.value)}
                     rows={2}
-                    
+                />
+            </div>
+            <div>arg1
+                <TextArea
+                    className="editor-step-detail-script"
+                    defaultValue={getArg(step,"arg1").value}
+                    onChange={e => this.textChanged("arg1",e.target.value)}
+
+                    rows={2}
                 />
             </div>
             <Button type="primary">完成</Button>
