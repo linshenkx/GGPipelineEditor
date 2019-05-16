@@ -10,7 +10,7 @@ import Button from 'antd/lib/button';
 import {getDefaultStep} from "../../util/StepUtil"
 const { TextArea } = Input;
 
-class ScriptStepEditor extends React.Component {
+class ShellScriptStepEditor extends React.Component {
 
 
     textChanged = (name,targetValue) => {
@@ -92,10 +92,10 @@ class ScriptStepEditor extends React.Component {
         </div>;
     }
 }
-export default withPropsAPI(ScriptStepEditor);
-ScriptStepEditor.propTypes = {
+export default withPropsAPI(ShellScriptStepEditor);
+ShellScriptStepEditor.propTypes = {
     step: PropTypes.any,
     onChange: PropTypes.func,
 };
 
-ScriptStepEditor.stepType = 'sh'; // FIXME do this a better way
+ShellScriptStepEditor.stepType = 'sh'; // FIXME do this a better way

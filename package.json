@@ -3,11 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "lodash.debounce": "4.0.8",
+    "mobx": "2.6.0",
+    "mobx-react": "3.5.7",
+    "mobx-utils": "1.1.2",
     "antd": "^3.17.0",
     "gg-editor": "^2.0.4",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-scripts": "3.0.1"
+    "react-scripts": "3.0.1",
+    "@jenkins-cd/blueocean-core-js": "^1.10.4"
   },
   "scripts": {
     "start": "react-scripts start",

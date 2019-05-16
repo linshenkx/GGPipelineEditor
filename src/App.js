@@ -15,11 +15,11 @@ import GGEditor, {
   CanvasPanel,
 
 } from 'gg-editor';
-import ScriptStepEditor from './my/editor/steps/ShellScriptStepEditor'
-// import StepInfo from './my/PipelineStore'
+import ShellScriptStepEditor from './my/editor/steps/ShellScriptStepEditor'
 import idgen from './my/service/IdGenerator'
 import SavesButten from './my/component/PropsButten'
-
+import pipelineStore from './my/service/PipelineStore'
+import {convertInternalModelToJson} from './my/service/PipelineSyntaxConverter'
 
 function getNewStep() {
   return {
@@ -97,7 +97,19 @@ class App extends React.Component {
           <Command name="append" className="item">添加相邻节点</Command>
           <Command name="appendChild" className="item">添加子节点</Command>
           <SavesButten text="保存" resolveData={
-            (data)=>{console.log("保存:" + JSON.stringify(data));}
+            (data)=>{console.log("保存:" + JSON.stringify(data));
+                pipelineStore.setPipeline({
+                    agent: { type: 'any' },
+                    children: [],
+                });
+                console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+
+                pipelineStore.createSequentialStage("firstStage");
+                // PipelineStore.addStep()
+                console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+                console.log("convertInternalModelToJson:"+convertInternalModelToJson(pipelineStore.pipeline));
+            }
+
           }/>
         </Toolbar>
         <ItemPanel className="ItemPanel">
@@ -211,9 +223,9 @@ class App extends React.Component {
         <DetailPanel>
 
           <NodePanel>
-            <ScriptStepEditor step={getNewStep()}
+            <ShellScriptStepEditor step={getNewStep()}
                               onChange={step => {
-                                console.log("修改后的step：" + JSON.stringify(step.data))
+                                console.log("修改后的step：" + JSON.stringify(step.data));
                               }
                               }/>
           </NodePanel>

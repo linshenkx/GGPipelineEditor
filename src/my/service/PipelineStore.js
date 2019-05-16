@@ -1,6 +1,6 @@
 // @flow
 
-import idgen from './service/IdGenerator';
+import idgen from './IdGenerator';
 // import type { PipelineKeyValuePair } from './PipelineSyntaxConverter';
 // import { DragPosition } from '../components/editor/DragPosition';
 
