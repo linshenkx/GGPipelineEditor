@@ -3,10 +3,8 @@ import { Fetch, UrlConfig } from '@jenkins-cd/blueocean-core-js';
 const cache = {};
 
 export default function fetch(path, body, handler, disableLoadingIndicator) {
-    let userCrumb2=function (crumb) {
-        console.log("crumb:"+crumb);
-    };
-    const  useCrumb = function(crumb) {
+
+    const  testuseCrumb = function(crumb) {
         const headers = {
             'Content-Type': 'application/x-www-form-urlencoded',
         };
@@ -29,7 +27,7 @@ export default function fetch(path, body, handler, disableLoadingIndicator) {
     };
 
     if (cache.crumb) {
-        useCrumb(cache.crumb);
+        testuseCrumb(cache.crumb);
     } else {
         Fetch.fetch(`${UrlConfig.getJenkinsRootURL()}/blue/rest/pipeline-metadata/crumbInfo`, {
             fetchOptions: { method: 'GET', disableLoadingIndicator: disableLoadingIndicator },
@@ -40,7 +38,7 @@ export default function fetch(path, body, handler, disableLoadingIndicator) {
             }
 
             if (cache.crumb) {
-                useCrumb(cache.crumb);
+                testuseCrumb(cache.crumb);
             } else {
                 try {
                     let crumb = response.text();
@@ -48,14 +46,14 @@ export default function fetch(path, body, handler, disableLoadingIndicator) {
                         crumb
                             .then(c => {
                                 cache.crumb = c;
-                                useCrumb(c);
+                                testuseCrumb(c);
                             })
                             .catch(err => {
                                 fetch(path, body, handler, disableLoadingIndicator);
                             });
                     } else {
                         cache.crumb = crumb;
-                        useCrumb(crumb);
+                        testuseCrumb(crumb);
                     }
                 } catch (e) {
                     fetch(path, body, handler, disableLoadingIndicator);

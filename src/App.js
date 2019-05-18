@@ -108,6 +108,8 @@ class App extends React.Component {
                 // PipelineStore.addStep()
                 console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
                 console.log("convertInternalModelToJson:"+convertInternalModelToJson(pipelineStore.pipeline));
+                console.log("convertInternalModelToJson json:"+JSON.stringify(convertInternalModelToJson(pipelineStore.pipeline)));
+
             }
 
           }/>
