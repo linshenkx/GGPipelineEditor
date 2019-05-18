@@ -19,7 +19,7 @@ import ShellScriptStepEditor from './my/editor/steps/ShellScriptStepEditor'
 import idgen from './my/service/IdGenerator'
 import SavesButten from './my/component/PropsButten'
 import pipelineStore from './my/service/PipelineStore'
-import {convertInternalModelToJson} from './my/service/PipelineSyntaxConverter'
+import {convertInternalModelToJson,convertJsonToPipeline} from './my/service/PipelineSyntaxConverter'
 
 function getNewStep() {
   return {
@@ -104,11 +104,23 @@ class App extends React.Component {
                 });
                 console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
 
-                pipelineStore.createSequentialStage("firstStage");
-                // PipelineStore.addStep()
+                let defaultStage= pipelineStore.createSequentialStage("firstStage");
+                console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+
+                pipelineStore.addStep(defaultStage,null,{
+                    functionName:"functionName1",
+                    displayName:"displayName"
+                });
                 console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
                 console.log("convertInternalModelToJson:"+convertInternalModelToJson(pipelineStore.pipeline));
-                console.log("convertInternalModelToJson json:"+JSON.stringify(convertInternalModelToJson(pipelineStore.pipeline)));
+                let pipelineJsonObject=convertInternalModelToJson(pipelineStore.pipeline);
+                console.log("pipelineJsonObject json:"+JSON.stringify(pipelineJsonObject));
+
+
+                // convertJsonToPipeline(pipelineJsonObject,(jenkinsfile,errors)=>{
+                //     console.log("jenkinsfile:"+jenkinsfile);
+                //     console.log("errors:"+errors);
+                // })
 
             }
 
