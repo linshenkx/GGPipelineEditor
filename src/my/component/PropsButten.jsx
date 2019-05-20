@@ -14,7 +14,7 @@ class SavesButten extends React.Component {
     };
 
     render() {
-        return<Button onClick={this.handleSaveClick}>{this.props.text}</Button>
+        return<Button onClick={this.handleSaveClick} size="large">{this.props.text}</Button>
     }
 }
 SavesButten.propTypes = {

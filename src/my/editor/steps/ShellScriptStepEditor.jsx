@@ -97,7 +97,7 @@ class ShellScriptStepEditor extends React.Component {
             </div>
             <div className="agent">
                 <div className="text">代理</div>
-                <Select defaultValue="lucy" style={{ width: 120 }} className="Select">
+                <Select defaultValue="any" style={{ width: 120 }} className="Select">
                     <Option value="docker">docker</Option>
                     <Option value="any">any</Option>
                 </Select>
