@@ -5,15 +5,16 @@ import { withPropsAPI } from 'gg-editor';
 import './ShellScriptStepEditor.css';
 
 import 'antd/dist/antd.css';
-import { Input } from 'antd';
+import { Input,Button,Select } from 'antd';
+
 
 // import Button from 'antd/lib/button';
 import {getDefaultStep} from "../../util/StepUtil"
 const { TextArea } = Input;
-
+const Option = Select.Option;
 class ShellScriptStepEditor extends React.Component {
 
-
+    
     textChanged = (name,targetValue) => {
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
@@ -66,7 +67,7 @@ class ShellScriptStepEditor extends React.Component {
         }
         return <div className="wrapper">
         <div className="stage">
-            <div className="text">stage</div>
+            <div className="text">step</div>
         </div>
             <div className="name">name:
                 <TextArea rows={2}
@@ -91,10 +92,21 @@ class ShellScriptStepEditor extends React.Component {
                 />
             </div>
             <div className="step">
-              <div className="text">step</div>
+              <div className="text">stage</div>
               <div className="print">
                 <TextArea className="print"  defaultValue={step.script} rows={2} />
               </div>
+            </div>
+            <div className="agent">
+                <div className="text">代理</div>
+                <Select defaultValue="lucy" style={{ width: 120 }} className="Select">
+                    <Option value="docker">docker</Option>
+                    <Option value="any">any</Option>
+                </Select>
+            </div>
+            <div className="evironment">
+                <div className="text">环境变量</div>
+                
             </div>
         </div>;
     }

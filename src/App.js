@@ -9,6 +9,8 @@ import GGEditor, {
   CanvasPanel,
 
 } from 'gg-editor';
+import 'antd/dist/antd.css';
+import { Input,Button } from 'antd';
 import ShellScriptStepEditor from './my/editor/steps/ShellScriptStepEditor'
 import idgen from './my/service/IdGenerator'
 import SavesButten from './my/component/PropsButten'
@@ -70,6 +72,14 @@ class App extends React.Component {
       cell: 1
     }
     return <div className="App">
+    <div className="Homeuser">
+                <div className="name">
+                    <Input type='text' size="large" placeholder='id'/>
+                </div>
+                <div className="homeId">
+                    <Button type="primary" size="large">登录</Button>
+                </div>
+            </div>
       <GGEditor className="GGEditor">
         <Toolbar className="Toolbar">
           <Command name="clear" className="item">清空画布</Command>
@@ -81,15 +91,8 @@ class App extends React.Component {
           <Command name="zoomOut" className="item">缩小</Command>
           <Command name="autoZoom" className="item">自适应尺寸</Command>
           <Command name="resetZoom" className="item">实际尺寸</Command>
-          <Command name="toFront" className="item">提升层级</Command>
-          <Command name="toBack" className="item">下降层级</Command>
           <Command name="copy" className="item">复制</Command>
           <Command name="paste" className="item">粘贴</Command>
-          <Command name="multiSelect" className="item">多选模式</Command>
-          <Command name="addGroup" className="item">成组</Command>
-          <Command name="unGroup" className="item">取消组</Command>
-          <Command name="append" className="item">添加相邻节点</Command>
-          <Command name="appendChild" className="item">添加子节点</Command>
           <SavesButten text="保存" resolveData={
             (data)=>{console.log("保存:" + JSON.stringify(data));
                 pipelineStore.setPipeline({

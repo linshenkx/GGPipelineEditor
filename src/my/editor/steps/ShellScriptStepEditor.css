@@ -4,7 +4,7 @@
     width: 400px;
     height: 321px;
 }
-.stage{
+.stage,.agent,.evironment{
     height: 50px;
     border-bottom: 1px solid #ccc;
     text-align: left;
@@ -16,11 +16,20 @@
 .step{
     background: rgb(250, 250, 250);
     border: 1px solid #ccc;
-    height: 480px;
+    height: 150px;
     margin-top: 50px;
 }
 .step .text{
     border-bottom: 1px solid #ccc;
     padding: 15px;
     text-align: left;
+}
+.agent{
+    height: 100px;
+}
+.Select{
+    width: 100% !important;
+}
+.evironment{
+    height: 200px;
 }
