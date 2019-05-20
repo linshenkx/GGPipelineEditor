@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { getArg, setArg } from '../../service/ArgService';
 import { withPropsAPI } from 'gg-editor';
 import './ShellScriptStepEditor.css';
-
+import Test from '../../../test'
 import 'antd/dist/antd.css';
 import { Input,Button,Select,Table} from 'antd';
 
@@ -12,9 +12,7 @@ import { Input,Button,Select,Table} from 'antd';
 import {getDefaultStep} from "../../util/StepUtil"
 const { TextArea } = Input;
 const Option = Select.Option;
-const paginationProps={
-    hideOnSinglePage:true
-}
+
 const columns = [
   {
     title: '变量名',
@@ -129,7 +127,8 @@ class ShellScriptStepEditor extends React.Component {
             </div>
             <div className="evironment">
                 <div className="text">环境变量</div>
-                <Table columns={columns} dataSource={data} pagination={ paginationProps }/>
+                <Test />
+                {/* <Table columns={columns} dataSource={data} pagination={ paginationProps }/> */}
             </div>
         </div>;
     }
