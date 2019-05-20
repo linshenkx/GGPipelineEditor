@@ -140,6 +140,12 @@ class App extends React.Component {
               onNodeClick={(e) => {
                 console.log("点击节点")
                 console.log(e.item.model);
+                if(e.item.model.label==="shellScript"){
+                  e.item.model.color = '#00A1F3'
+                }
+                if(e.item.model.label==="print"){
+                  e.item.model.color = '#FF0066'
+                }
               }}
               onEdgeClick={(e) => {
                 console.log("点击边线");
