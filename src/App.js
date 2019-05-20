@@ -42,26 +42,16 @@ class App extends React.Component {
         y: 55,
         id: 'ea1184e8',
         index: 0,
-      }, {
-        type: 'node',
-        size: '70*70',
-        shape: 'flow-circle',
-        color: '#FA8C16',
-        label: '结束节点',
-        x: 55,
-        y: 255,
-        id: '481fbb1a',
-        index: 2,
       }],
-      edges: [{
-        source: 'ea1184e8',
-        sourceAnchor: 2,
-        target: '481fbb1a',
-        targetAnchor: 0,
-        id: '7989ac70',
-        index: 1,
-        myProp: {}
-      }],
+      // edges: [{
+      //   source: 'ea1184e8',
+      //   sourceAnchor: 2,
+      //   target: '481fbb1a',
+      //   targetAnchor: 0,
+      //   id: '7989ac70',
+      //   index: 1,
+      //   myProp: {}
+      // }],
     };
     let graph = {
       container: 'mountNode',
@@ -74,7 +64,7 @@ class App extends React.Component {
     return <div className="App">
     <div className="Homeuser">
                 <div className="name">
-                    <Input type='text' size="large" placeholder='id'/>
+                    <Input type='text' size="large" placeholder='id' />
                 </div>
                 <div className="homeId">
                     <Button type="primary" size="large">登录</Button>
@@ -121,31 +111,11 @@ class App extends React.Component {
               type="node"
               size="72*72"
               shape="flow-circle"
-              src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
-              model={{
-                color: '#FA8C16',
-                label: '起始节点',
-              }}
-          />
-          <Item
-              type="node"
-              size="72*72"
-              shape="flow-circle"
-              model={{
-                color: '#FA8C16',
-                label: '结束节点',
-              }}
-              src="http://prr2i4muo.bkt.clouddn.com/image/gg-editor/ZnPxbVjKYADMYxkTQXRi.svg"
-          />
-          <Item
-              type="node"
-              size="72*72"
-              shape="flow-circle"
               model={{
                 color: '#FA8C16',
                 label: 'shellScript',
               }}
-              src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
+              src="http://prsv4ko2y.bkt.clouddn.com/shell.svg"
           />
           <Item
               type="node"
@@ -153,9 +123,9 @@ class App extends React.Component {
               shape="flow-circle"
               model={{
                 color: '#FA8C16',
-                label: 'printMessage',
+                label: 'print',
               }}
-              src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
+              src="http://prsv4ko2y.bkt.clouddn.com/printMessage.svg"
           />
         </ItemPanel>
         <Flow data={data} graph={graph} grid={grid}

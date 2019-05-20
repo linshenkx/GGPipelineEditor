@@ -5,13 +5,36 @@ import { withPropsAPI } from 'gg-editor';
 import './ShellScriptStepEditor.css';
 
 import 'antd/dist/antd.css';
-import { Input,Button,Select } from 'antd';
+import { Input,Button,Select,Table} from 'antd';
 
 
 // import Button from 'antd/lib/button';
 import {getDefaultStep} from "../../util/StepUtil"
 const { TextArea } = Input;
 const Option = Select.Option;
+const paginationProps={
+    hideOnSinglePage:true
+}
+const columns = [
+  {
+    title: '变量名',
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: '变量值',
+    dataIndex: 'value',
+    key: 'value',
+  }
+];
+
+const data = [
+  {
+    key: '1',
+    name: 'John Brown',
+    value: 32,
+  }
+];
 class ShellScriptStepEditor extends React.Component {
 
     
@@ -106,7 +129,7 @@ class ShellScriptStepEditor extends React.Component {
             </div>
             <div className="evironment">
                 <div className="text">环境变量</div>
-                
+                <Table columns={columns} dataSource={data} pagination={ paginationProps }/>
             </div>
         </div>;
     }
