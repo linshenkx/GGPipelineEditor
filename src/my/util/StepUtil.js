@@ -8,5 +8,6 @@ export function getDefaultStep(){
         name: "defaultName",
         label: "defaultLabel",
         data: {},
+        script:"Defaultscript"
     };
 }

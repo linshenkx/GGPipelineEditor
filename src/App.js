@@ -1,11 +1,5 @@
 import React from 'react';
 import './App.css';
-
-//import NodeDetail from './NodeDetail.jsx';
-// import EdgeDetail from './EdgeDetail.jsx';
-// import GroupDetail from './GroupDetail.jsx';
-// import CanvasDetail from './CanvasDetail.jsx';
-// import MultiDetail from './MultiDetail.jsx';
 import GGEditor, {
   Flow, Item, ItemPanel, Command, Toolbar, DetailPanel,
   NodePanel,
@@ -69,8 +63,8 @@ class App extends React.Component {
     };
     let graph = {
       container: 'mountNode',
-      width: 1000,
-      height: 500,
+      width: 1300,
+      height: 800,
     };
     let grid = {
       cell: 1
@@ -115,13 +109,6 @@ class App extends React.Component {
                 console.log("convertInternalModelToJson:"+convertInternalModelToJson(pipelineStore.pipeline));
                 let pipelineJsonObject=convertInternalModelToJson(pipelineStore.pipeline);
                 console.log("pipelineJsonObject json:"+JSON.stringify(pipelineJsonObject));
-
-
-                // convertJsonToPipeline(pipelineJsonObject,(jenkinsfile,errors)=>{
-                //     console.log("jenkinsfile:"+jenkinsfile);
-                //     console.log("errors:"+errors);
-                // })
-
             }
 
           }/>
@@ -134,7 +121,7 @@ class App extends React.Component {
               src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
               model={{
                 color: '#FA8C16',
-                label: '自定义节点1',
+                label: '起始节点',
               }}
           />
           <Item
@@ -143,7 +130,17 @@ class App extends React.Component {
               shape="flow-circle"
               model={{
                 color: '#FA8C16',
-                label: '自定义节点2',
+                label: '结束节点',
+              }}
+              src="http://prr2i4muo.bkt.clouddn.com/image/gg-editor/ZnPxbVjKYADMYxkTQXRi.svg"
+          />
+          <Item
+              type="node"
+              size="72*72"
+              shape="flow-circle"
+              model={{
+                color: '#FA8C16',
+                label: 'shellScript',
               }}
               src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
           />
@@ -153,17 +150,7 @@ class App extends React.Component {
               shape="flow-circle"
               model={{
                 color: '#FA8C16',
-                label: '自定义节点3',
-              }}
-              src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
-          />
-          <Item
-              type="node"
-              size="72*72"
-              shape="flow-circle"
-              model={{
-                color: '#FA8C16',
-                label: '自定义节点4',
+                label: 'printMessage',
               }}
               src="https://gw.alipayobjects.com/zos/rmsportal/ZnPxbVjKYADMYxkTQXRi.svg"
           />

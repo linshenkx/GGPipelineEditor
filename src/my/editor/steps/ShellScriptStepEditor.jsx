@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { getArg, setArg } from '../../service/ArgService';
 import { withPropsAPI } from 'gg-editor';
+import './ShellScriptStepEditor.css';
 
 import 'antd/dist/antd.css';
 import { Input } from 'antd';
 
-import Button from 'antd/lib/button';
+// import Button from 'antd/lib/button';
 import {getDefaultStep} from "../../util/StepUtil"
 const { TextArea } = Input;
 
@@ -29,10 +30,10 @@ class ShellScriptStepEditor extends React.Component {
                 step.name=targetValue;break;
             case "label":
                 step.label=targetValue;break;
+                
             default:
                 step=setArg(step,name,targetValue);
         }
-
         model=this.setStepToModel(model,step);
         propsAPI.update(item,model);
 
@@ -56,7 +57,6 @@ class ShellScriptStepEditor extends React.Component {
 
 
     render() {
-
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
         let {model}=item;
@@ -64,8 +64,10 @@ class ShellScriptStepEditor extends React.Component {
         if(!step){
             step=getDefaultStep();
         }
-
-        return <div>
+        return <div className="wrapper">
+        <div className="stage">
+            <div className="text">stage</div>
+        </div>
             <div className="name">name:
                 <TextArea rows={2}
                 className="editor-step-detail-name"
@@ -88,7 +90,12 @@ class ShellScriptStepEditor extends React.Component {
                     rows={2}
                 />
             </div>
-            <Button type="primary">完成</Button>
+            <div className="step">
+              <div className="text">step</div>
+              <div className="print">
+                <TextArea className="print"  defaultValue={step.script} rows={2} />
+              </div>
+            </div>
         </div>;
     }
 }
