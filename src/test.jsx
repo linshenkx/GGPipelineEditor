@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { Table, Input, Button, Popconfirm, Form } from 'antd';
-import React, { ReactDOM } from 'react'
+import React from 'react'
 
 const EditableContext = React.createContext();
 
@@ -183,7 +183,7 @@ class EditableTable extends React.Component {
     return (
       <div>
         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-          Add a row
+          添加环境变量
         </Button>
         <Table
           components={components}

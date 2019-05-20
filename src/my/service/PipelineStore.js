@@ -10,9 +10,13 @@ import idgen from './IdGenerator';
 export type StageInfo = {
     name: string,
     id: number,
+    // eslint-disable-next-line no-use-before-define
     children: Array<StageInfo | UnknownSection>,
+    // eslint-disable-next-line no-use-before-define
     steps: StepInfo[],
+    // eslint-disable-next-line no-use-before-define
     environment: EnvironmentEntryInfo[],
+    // eslint-disable-next-line no-use-before-define
     agent: StepInfo,
 };
 
@@ -45,6 +49,7 @@ export class UnknownSection {
     }
 }
 
+// eslint-disable-next-line no-unused-vars
 function _copy<T>(obj: T): ?T {
     if (!obj) {
         return null;
@@ -71,7 +76,7 @@ function createStage(name: string): StageInfo {
  */
 function findParentStage(container: StageInfo, childStage: StageInfo, safetyValve: number = 5): ?StageInfo {
     // TODO: TESTS
-    if (!container || !container.children || container.children.length == 0 || safetyValve < 1) {
+    if (!container || !container.children || container.children.length === 0 || safetyValve < 1) {
         return null;
     }
 
@@ -116,7 +121,7 @@ const findStageByStep = function(stage, step) {
     // Does this stage contain this step directly?
     if (stage.steps && stage.steps.length > 0) {
         for (const s of stage.steps) {
-            if (s == step) {
+            if (s === step) {
                 return stage;
             }
         }
@@ -182,6 +187,7 @@ class PipelineStore {
         const { pipeline } = this;
 
         let newStage = createStage(name);
+        // eslint-disable-next-line no-unused-vars
         const stageId = newStage.id;
 
         pipeline.children = [...pipeline.children, newStage];
@@ -194,7 +200,7 @@ class PipelineStore {
 
         let newStage = createStage(name);
 
-        if (parentStage.children.length == 0) {
+        if (parentStage.children.length === 0) {
             // Converting a normal stage with steps into a container of parallel branches, so there's more to do
             let zerothStage = createStage(parentStage.name);
 
@@ -264,6 +270,7 @@ class PipelineStore {
         const parentStage = this.findParentStage(stage) || this.pipeline;
 
         // For simplicity we'll just copy the stages list and then mutate it
+        // eslint-disable-next-line no-unused-vars
         let newStages = [...parentStage.children];
 
         // First, remove selected stage from parent list
@@ -272,7 +279,7 @@ class PipelineStore {
         newChildren.splice(idx, 1);
 
         // see if this is a nested stage and we need to move a parallel to a single top-level
-        if (parentStage != this.pipeline && newChildren.length === 1) {
+        if (parentStage !== this.pipeline && newChildren.length === 1) {
             let onlyChild = newChildren[0];
             newChildren = [];
             moveStageProperties(onlyChild, parentStage);
@@ -323,6 +330,7 @@ class PipelineStore {
         const selectedStage = findStageByStep(this.pipeline, step);
         const oldStepsForStage = selectedStage.steps || [];
         let newStepsForStage = oldStepsForStage;
+        // eslint-disable-next-line no-unused-vars
         let newSelectedStep;
 
         const parent = findParentStepByChild(selectedStage.steps, step);

@@ -16,8 +16,8 @@ import ShellScriptStepEditor from './my/editor/steps/ShellScriptStepEditor'
 import idgen from './my/service/IdGenerator'
 import SavesButten from './my/component/PropsButten'
 import pipelineStore from './my/service/PipelineStore'
-import {convertInternalModelToJson,convertJsonToPipeline} from './my/service/PipelineSyntaxConverter'
-
+import {convertInternalModelToJson} from './my/service/PipelineSyntaxConverter'
+// convertJsonToPipeline
 function getNewStep() {
   return {
     id: idgen.next(),

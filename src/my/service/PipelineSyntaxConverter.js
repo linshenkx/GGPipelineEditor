@@ -6,18 +6,22 @@ import type { PipelineInfo, StageInfo, StepInfo } from './PipelineStore';
 import pipelineMetadataService from './PipelineMetadataService';
 import idgen from './IdGenerator';
 
+// eslint-disable-next-line no-unused-vars
 const value = 'value';
 
 export type PipelineJsonContainer = {
+    // eslint-disable-next-line no-use-before-define
     pipeline: PipelineJson,
 };
 
 export type PipelineAgent = {
     type: string,
+    // eslint-disable-next-line no-use-before-define
     arguments: PipelineNamedValueDescriptor[],
 };
 
 export type PipelineJson = {
+    // eslint-disable-next-line no-use-before-define
     stages: PipelineStage[],
     agent: PipelineAgent,
 };
@@ -46,6 +50,7 @@ export type PipelineStage = {
     environment?: PipelineNamedValueDescriptor[],
 };
 
+// eslint-disable-next-line no-unused-vars
 function singleValue(v: any) {
     if (Array.isArray(v)) {
         return v[0];
@@ -161,7 +166,7 @@ export function convertStageFromJson(topStage: PipelineStage): StageInfo {
             const b = topStage.branches[j];
 
             let stage: StageInfo;
-            if (b.name == 'default' && topStage.branches.length === 1) {
+            if (b.name === 'default' && topStage.branches.length === 1) {
                 // non-parallel top-level stages are defined by a single
                 // nested stage named 'default'
                 stage = topStageInfo;
@@ -283,7 +288,7 @@ export function convertStageToJson(stage: StageInfo): PipelineStage {
     // FIXME this is going to have to change, there's currently no way to define
     // an agent for each parallel branch, with nested stages and/or execution
     // graph order, this will go away in favor of a different mechanism...
-    if (stage.agent && stage.agent && stage.agent.type != 'none') {
+    if (stage.agent && stage.agent && stage.agent.type !== 'none') {
         out.agent = removeExtraMarkers(stage.agent);
     }
 
