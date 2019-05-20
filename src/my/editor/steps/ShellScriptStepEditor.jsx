@@ -9,12 +9,13 @@ import { Input,Select} from 'antd';
 
 
 // import Button from 'antd/lib/button';
-import {getDefaultStep} from "../../util/StepUtil"
+import {getDefaultStep,getStepFromModel,setStepToModel} from "../../util/StepUtil"
+import pipelineStore from "../../service/PipelineStore";
+import {convertInternalModelToJson} from "../../service/PipelineSyntaxConverter";
 const { TextArea } = Input;
 const Option = Select.Option;
 class ShellScriptStepEditor extends React.Component {
 
-    
     textChanged = (name,targetValue) => {
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
@@ -23,7 +24,7 @@ class ShellScriptStepEditor extends React.Component {
         if(model.myProps&&model.myProps.step){
             step=model.myProps.step;
         }else {
-            step=getDefaultStep();
+            step=getDefaultStep(ShellScriptStepEditor.stepType);
         }
 
         switch (name) {
@@ -31,66 +32,63 @@ class ShellScriptStepEditor extends React.Component {
                 step.name=targetValue;break;
             case "label":
                 step.label=targetValue;break;
-                
+
             default:
                 step=setArg(step,name,targetValue);
         }
-        model=this.setStepToModel(model,step);
+        model=setStepToModel(model,step);
         propsAPI.update(item,model);
 
         this.props.onChange(step);
     };
 
-    getStepFromModel(model){
-        let {myProps}=model;
-        if(myProps && myProps.step){
-            return  myProps.step;
-        }
-    }
 
-    setStepToModel(model,step){
-        if(!model.myProps){
-            model.myProps={};
-        }
-        model.myProps.step=step;
-        return model;
-    }
 
 
     render() {
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
         let {model}=item;
-        let step=this.getStepFromModel(model);
+        let step=getStepFromModel(model);
         if(!step){
-            step=getDefaultStep();
+            step=getDefaultStep(ShellScriptStepEditor.stepType);
         }
         return <div className="wrapper">
         <div className="stage">
-            <div className="text">step</div>
+            <div className="text">step类型:{step.name}</div>
         </div>
-            <div className="name">name:
-                <TextArea rows={2}
-                className="editor-step-detail-name"
-                defaultValue={step.name}
-                onChange={e => this.textChanged("name",e.target.value)} />
-            </div>
-            <div>label
+            <div>shell 脚本：
                 <TextArea
                     className="editor-step-detail-script"
-                    defaultValue={step.label}
-                    onChange={e => this.textChanged("label",e.target.value)}
+                    defaultValue={getArg(step,"script").value}
+                    onChange={e => this.textChanged("script",e.target.value)}
                     rows={2}
                 />
             </div>
-            <div>arg1
-                <TextArea
-                    className="editor-step-detail-script"
-                    defaultValue={getArg(step,"arg1").value}
-                    onChange={e => this.textChanged("arg1",e.target.value)}
-                    rows={2}
-                />
-            </div>
+            <button onClick={
+                ()=>{
+                    const { propsAPI } = this.props;
+                    let item=propsAPI.getSelected()[0];
+                    let {model}=item;
+                    let step=getStepFromModel(model);
+
+                    console.log("step json:"+JSON.stringify(step));
+                    pipelineStore.setPipeline({
+                        agent: { type: 'any' },
+                        children: [],
+                    });
+                    console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+
+                    let defaultStage= pipelineStore.createSequentialStage("firstStage");
+                    console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+
+                    pipelineStore.addOldStep(defaultStage,null,step);
+                    console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+                    let pipelineJsonObject=convertInternalModelToJson(pipelineStore.pipeline);
+                    console.log("pipelineJsonObject json:"+JSON.stringify(pipelineJsonObject));
+                }
+
+            }>打印jenkinsJson</button>
             <div className="step">
               <div className="text">stage</div>
               <div className="print">

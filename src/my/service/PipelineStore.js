@@ -292,6 +292,31 @@ class PipelineStore {
         this.notify();
     }
 
+    addOldStep(selectedStage: StageInfo, parentStep: StepInfo, step: any): StepInfo {
+        if (!selectedStage) {
+            throw new Error('Must provide a stage to add steps');
+        }
+
+        const oldStepsForStage = selectedStage.steps || [];
+        let newStepsForStage = oldStepsForStage;
+
+        if (parentStep != null) {
+            const parent = findStepById(oldStepsForStage, parentStep.id);
+            if (parent) {
+                parent.children = parent.children || [];
+                parent.children.push(step);
+            } else {
+                throw new Error('unable to find step: ' + parentStep.id);
+            }
+        } else {
+            newStepsForStage = [...oldStepsForStage, step];
+        }
+
+        selectedStage.steps = newStepsForStage;
+        this.notify();
+        return step;
+    }
+
     addStep(selectedStage: StageInfo, parentStep: StepInfo, step: any): StepInfo {
         if (!selectedStage) {
             throw new Error('Must provide a stage to add steps');

@@ -1,13 +1,28 @@
 import idgen from "../service/IdGenerator";
 
-export function getDefaultStep(){
+export function getDefaultStep(name){
     return {
         id: idgen.next(),
-        isContainer: true,
+        isContainer: false,
         children: [],
-        name: "defaultName",
-        label: "defaultLabel",
+        name: name,
+        label: "",
         data: {},
-        script:"Defaultscript"
+        script:""
     };
+}
+
+export function getStepFromModel(model){
+    let {myProps}=model;
+    if(myProps && myProps.step){
+        return  myProps.step;
+    }
+}
+
+export function setStepToModel(model,step){
+    if(!model.myProps){
+        model.myProps={};
+    }
+    model.myProps.step=step;
+    return model;
 }
