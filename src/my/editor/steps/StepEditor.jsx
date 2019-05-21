@@ -9,6 +9,8 @@ import { Input,Select} from 'antd';
 import ShellScriptStepEditor from './ShellScriptStepEditor'
 import EchoStepEditor from './EchoStepEditor'
 import GitStepEditor from './GitStepEditor'
+import AnyAgent from './AnyAgent'
+import DockerAgent from './DockerAgent'
 
 
 
@@ -29,11 +31,11 @@ class StepEditor extends React.Component {
         let agentEditor;
         switch (agent) {
             case "docker":
-                agentEditor=<div>docker-agent编辑器</div>;break;
+                agentEditor=<DockerAgent />;break;
             case "any":
-                agentEditor=<div>any-agent编辑器</div>;break;
+                agentEditor=<AnyAgent />;break;
             default:
-                agentEditor=<div>默认-any-agent编辑器</div>;break;
+                agentEditor=<AnyAgent />;break;
         }
         return agentEditor;
     };
@@ -71,7 +73,7 @@ class StepEditor extends React.Component {
             case 'git':stepEditorDetail=<GitStepEditor/>;break;
             default:stepEditorDetail=<div>空白编辑区 </div>;break;
         }
-        let agentEditor=this.getAgentEditor("any");
+        let agentEditor=this.getAgentEditor("docker");
         return <div className="wrapper">
                 <div className="stage">
                     <div className="text">当前Stage:{stageType}:{stage.name} <button>新stage</button></div>
