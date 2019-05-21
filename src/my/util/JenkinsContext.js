@@ -1,16 +1,14 @@
 import pipelineStore from "../service/PipelineStore";
 
 class JenkinsContext {
-     stageMap=new Map();
+    stageMap=new Map();
     currentStageId;
 }
 
 const jenkinsContext = new JenkinsContext();
-pipelineStore.setPipeline({
-    agent: { type: 'any' },
-    children: [],
-});
-let contextStage= pipelineStore.createSequentialStage("contextStage");
+
+let contextStage= pipelineStore.createNoneStage("contextStage");
+contextStage.id='00000';
 jenkinsContext.stageMap.set(contextStage.id,contextStage);
 jenkinsContext.currentStageId=contextStage.id;
 

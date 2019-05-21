@@ -40,6 +40,54 @@ class StepEditor extends React.Component {
         return agentEditor;
     };
 
+    newStage=()=>{
+        console.log("新建Stage");
+        let newStage= pipelineStore.createNoneStage("newStage");
+        jenkinsContext.stageMap.set(newStage.id,newStage);
+        jenkinsContext.currentStageId=newStage.id;
+
+        const { propsAPI } = this.props;
+        let item=propsAPI.getSelected()[0];
+        let {model}=item;
+
+        model=stepUtil.setStageIdToModel(model,newStage.id);
+        model=stepUtil.setStageTypeToModel(model,'leader');
+
+        propsAPI.update(item,model);
+
+        this.render();
+    };
+
+    setAgent=(stageId,agentType,key,value)=>{
+        let stage= jenkinsContext.stageMap.get(stageId);
+        stage.agent.type=agentType;
+        stage.agent.arguments.push({
+            key: key,
+            value: {
+                isLiteral: true,
+                value: value,
+            },
+        });
+        jenkinsContext.stageMap.set(stageId,stage);
+    };
+
+    setEnvironment=(stageId,envList)=>{
+        let stage= jenkinsContext.stageMap.get(stageId);
+        stage.environment=[];
+        envList.forEach((env)=>{
+            stage.environment.push({
+                key: env.key,
+                value: {
+                    isLiteral: true,
+                    value: env.value,
+                },
+            });
+        });
+        jenkinsContext.stageMap.set(stageId,stage);
+    };
+
+
+
     render() {
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
@@ -62,6 +110,13 @@ class StepEditor extends React.Component {
         if(!stageId){
             //新stageId默认为当前StageId
             stageId=jenkinsContext.currentStageId;
+            const { propsAPI } = this.props;
+            let item=propsAPI.getSelected()[0];
+            let {model}=item;
+
+            model=stepUtil.setStageIdToModel(model,stageId);
+
+            propsAPI.update(item,model);
         }
 
         let stage=jenkinsContext.stageMap.get(stageId);
@@ -76,21 +131,38 @@ class StepEditor extends React.Component {
         let agentEditor=this.getAgentEditor("docker");
         return <div className="wrapper">
                 <div className="stage">
-                    <div className="text">当前Stage:{stageType}:{stage.name} <button>新stage</button></div>
+                    <div className="text">
+                        当前Stage:{stageType}:{stage.name}
+                        <button onClick={this.newStage}>新stage</button>
+                    </div>
                 </div>
 
                 {stepEditorDetail}
 
                 <div className="agent">
                     <div className="text">代理</div>
-                    <Select defaultValue="any" style={{ width: 120 }} className="Select" onChange={(option)=>{agentEditor=this.getAgentEditor(option)}}>
+                    <Select defaultValue={stage.agent.type} style={{ width: 120 }} className="Select"
+                            onChange={
+                                (option)=>{
+                                    agentEditor=this.getAgentEditor(option);
+                                    let dockerAgent= document.getElementById('agent-docker');
+                                    dockerAgent.style.display='none';
+                                }
+                            }>
                         <Option value="any">any</Option>
+                        <Option value="none">none</Option>
                         <Option value="docker">docker</Option>
                     </Select>
                     {agentEditor}
                 </div>
 
-                <div className="evironment">
+                <div>  被挡到 </div>
+
+                <div id={'agent-docker'}>agent-docker </div>
+                <div id={'agent-none'}>agent-none </div>
+                <div id={'agent-any'}>agent-any </div>
+
+            <div className="evironment">
                     <div className="text">环境变量</div>
                     <Test />
                 </div>

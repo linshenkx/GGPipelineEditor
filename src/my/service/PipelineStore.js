@@ -183,6 +183,19 @@ class PipelineStore {
     pipeline: StageInfo;
     listeners: Function[] = [];
 
+    createNoneStage(name: string): StageInfo {
+        return {
+            name,
+            agent: {
+                type: 'none', // default to no agent
+                arguments: [],
+            },
+            id: idgen.next(),
+            children: [],
+            steps: [],
+        };
+    }
+
     createSequentialStage(name: string) {
         const { pipeline } = this;
 

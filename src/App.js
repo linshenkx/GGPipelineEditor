@@ -37,8 +37,9 @@ class App extends React.Component {
         id: '00001',
         index: 0,
         myProps:{
-              stepType:'empty',
-              stageType:'leader'
+            stepType:'empty',
+            stageType:'leader',
+            stageId:'00000'
         }
       }],
       // edges: [{
