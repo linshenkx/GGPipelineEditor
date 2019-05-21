@@ -33,15 +33,13 @@ class StepEditor extends React.Component {
             case "docker":
                 agentEditor=<DockerAgent />;break;
             case "any":
-                agentEditor=<div></div>;break;
+                agentEditor=<AnyAgent />;break;
             default:
-                agentEditor=<div></div>;break;
+                agentEditor=<AnyAgent />;break;
         }
         return agentEditor;
     };
-    state = {
-      agent:'any'
-    };
+
     newStage=()=>{
         console.log("新建Stage");
         let newStage= pipelineStore.createNoneStage("newStage");
@@ -130,7 +128,7 @@ class StepEditor extends React.Component {
             case 'git':stepEditorDetail=<GitStepEditor/>;break;
             default:stepEditorDetail=<div>空白编辑区 </div>;break;
         }
-        let agentEditor=this.getAgentEditor(this.state.agent);
+        let agentEditor=this.getAgentEditor("docker");
         return <div className="wrapper">
                 <div className="stage">
                     <div className="text">
@@ -143,39 +141,27 @@ class StepEditor extends React.Component {
 
                 <div className="agent">
                     <div className="text">代理</div>
-                    <Select defaultValue='any' style={{ width: 120 }} className="Select"
+                    <Select defaultValue={stage.agent.type} style={{ width: 120 }} className="Select"
                             onChange={
                                 (option)=>{
                                     agentEditor=this.getAgentEditor(option);
-                                    if(option==='any'){
-                                        console.log('你选中any')
-                                        this.setState({
-                                            agent:'any'
-                                        })
-                                    }
-                                    if(option==='none'){
-                                        console.log('你选中none')
-                                    }
-                                    if(option==='docker'){
-                                        console.log('你选中docker')
-                                        this.setState({
-                                            agent:'docker'
-                                        })
-                                    }
-                                    // let dockerAgent= document.getElementById('agent-docker');
-                                    // dockerAgent.style.display='none';
+                                    let dockerAgent= document.getElementById('agent-docker');
+                                    dockerAgent.style.display='none';
                                 }
                             }>
                         <Option value="any">any</Option>
+                        <Option value="none">none</Option>
                         <Option value="docker">docker</Option>
                     </Select>
                     {agentEditor}
-                    {/* <div id={'agent-docker'}>agent-docker </div>
-                    <div id={'agent-none'}>agent-none </div>
-                    <div id={'agent-any'}>agent-any </div> */}
                 </div>
 
-                
+                <div>  被挡到 </div>
+
+                <div id={'agent-docker'}>agent-docker </div>
+                <div id={'agent-none'}>agent-none </div>
+                <div id={'agent-any'}>agent-any </div>
+
             <div className="evironment">
                     <div className="text">环境变量</div>
                     <Test />
