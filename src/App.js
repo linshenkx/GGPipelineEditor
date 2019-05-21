@@ -17,17 +17,10 @@ import idgen from './my/service/IdGenerator'
 import SavesButten from './my/component/PropsButten'
 import pipelineStore from './my/service/PipelineStore'
 import {convertInternalModelToJson} from './my/service/PipelineSyntaxConverter'
-// convertJsonToPipeline
-function getNewStep() {
-  return {
-    id: idgen.next(),
-    isContainer: true,
-    children: [],
-    name: "defaultName",
-    label: "defaultLabel",
-    data: {},
-  };
-}
+import jenkinsContext from './my/util/JenkinsContext'
+import StepEditor from './my/editor/steps/StepEditor'
+
+
 class App extends React.Component {
 
 
@@ -41,8 +34,12 @@ class App extends React.Component {
         label: '起止节点',
         x: 55,
         y: 55,
-        id: 'ea1184e8',
+        id: '00001',
         index: 0,
+        myProps:{
+              stepType:'empty',
+              stageType:'leader'
+        }
       }],
       // edges: [{
       //   source: 'ea1184e8',
@@ -61,7 +58,7 @@ class App extends React.Component {
     };
     let grid = {
       cell: 1
-    }
+    };
     return <div className="App">
     <div className="Homeuser">
                 <div className="name">
@@ -86,23 +83,23 @@ class App extends React.Component {
           <Command name="paste" className="item">粘贴</Command>
           <SavesButten text="保存" resolveData={
             (data)=>{console.log("保存:" + JSON.stringify(data));
-                pipelineStore.setPipeline({
-                    agent: { type: 'any' },
-                    children: [],
-                });
+                // pipelineStore.setPipeline({
+                //     agent: { type: 'any' },
+                //     children: [],
+                // });
                 console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
 
-                let defaultStage= pipelineStore.createSequentialStage("firstStage");
-                console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
-
-                pipelineStore.addStep(defaultStage,null,{
-                    functionName:"functionName1",
-                    displayName:"displayName"
-                });
-                console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
-                console.log("convertInternalModelToJson:"+convertInternalModelToJson(pipelineStore.pipeline));
-                let pipelineJsonObject=convertInternalModelToJson(pipelineStore.pipeline);
-                console.log("pipelineJsonObject json:"+JSON.stringify(pipelineJsonObject));
+                // let defaultStage= pipelineStore.createSequentialStage("firstStage");
+                // console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+                //
+                // pipelineStore.addStep(defaultStage,null,{
+                //     functionName:"functionName1",
+                //     displayName:"displayName"
+                // });
+                // console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+                // console.log("convertInternalModelToJson:"+convertInternalModelToJson(pipelineStore.pipeline));
+                // let pipelineJsonObject=convertInternalModelToJson(pipelineStore.pipeline);
+                // console.log("pipelineJsonObject json:"+JSON.stringify(pipelineJsonObject));
             }
 
           }/>
@@ -115,6 +112,9 @@ class App extends React.Component {
               model={{
                 color: '#FA8C16',
                 label: 'shellScript',
+                myProps:{
+                    stepType:'sh'
+                }
               }}
               src="http://prsv4ko2y.bkt.clouddn.com/shell.svg"
           />
@@ -124,10 +124,26 @@ class App extends React.Component {
               shape="flow-circle"
               model={{
                 color: '#FA8C16',
-                label: 'print',
+                label: 'echo',
+                myProps:{
+                    stepType:'echo'
+                }
               }}
               src="http://prsv4ko2y.bkt.clouddn.com/printMessage.svg"
           />
+            <Item
+                type="node"
+                size="72*72"
+                shape="flow-circle"
+                model={{
+                    color: '#FA8C16',
+                    label: 'git',
+                    myProps:{
+                        stepType:'git'
+                    }
+                }}
+                src="http://prr2i4muo.bkt.clouddn.com/git.svg"
+            />
         </ItemPanel>
         <Flow data={data} graph={graph} grid={grid}
               onClick={(e) => {
@@ -204,11 +220,12 @@ class App extends React.Component {
         <DetailPanel>
 
           <NodePanel>
-            <ShellScriptStepEditor step={getNewStep()}
-                              onChange={step => {
-                                console.log("修改后的step：" + JSON.stringify(step.data));
-                              }
-                              }/>
+            {/*<ShellScriptStepEditor step={getNewStep()}*/}
+            {/*                  onChange={step => {*/}
+            {/*                    console.log("修改后的step：" + JSON.stringify(step.data));*/}
+            {/*                  }*/}
+            {/*                  }/>*/}
+            <StepEditor/>
           </NodePanel>
 
           <EdgePanel>

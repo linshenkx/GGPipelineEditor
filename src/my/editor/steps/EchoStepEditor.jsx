@@ -8,7 +8,7 @@ import { Input} from 'antd';
 
 import {stepUtil} from "../../util/StepUtil"
 const { TextArea } = Input;
-class ShellScriptStepEditor extends React.Component {
+class EchoStepEditor extends React.Component {
 
     textChanged = (name,targetValue) => {
 
@@ -19,7 +19,7 @@ class ShellScriptStepEditor extends React.Component {
         if(model.myProps&&model.myProps.step){
             step=model.myProps.step;
         }else {
-            step=stepUtil.getDefaultStep(ShellScriptStepEditor.stepType);
+            step=stepUtil.getDefaultStep(EchoStepEditor.stepType);
         }
 
         step=setArg(step,name,targetValue);
@@ -39,26 +39,26 @@ class ShellScriptStepEditor extends React.Component {
         let {model}=item;
         let step=stepUtil.getStepFromModel(model);
         if(!step){
-            step=stepUtil.getDefaultStep(ShellScriptStepEditor.stepType);
+            step=stepUtil.getDefaultStep(EchoStepEditor.stepType);
         }
         return <div className="wrapper">
         <div className="stage">
             <div className="text">step类型:{step.name}</div>
         </div>
-            <div>shell 脚本：
+            <div>打印信息：
                 <TextArea
-                    className="editor-step-detail-script"
-                    defaultValue={getArg(step,"script").value}
-                    onChange={e => this.textChanged("script",e.target.value)}
+                    className="editor-step-detail-script echo-step"
+                    defaultValue={getArg(step,"message").value}
+                    onChange={e => this.textChanged("message",e.target.value)}
                     rows={10}
                 />
             </div>
         </div>;
     }
 }
-export default withPropsAPI(ShellScriptStepEditor);
-ShellScriptStepEditor.propTypes = {
+export default withPropsAPI(EchoStepEditor);
+EchoStepEditor.propTypes = {
     onChange: PropTypes.func,
 };
 
-ShellScriptStepEditor.stepType = 'sh'; // FIXME do this a better way
+EchoStepEditor.stepType = 'echo';

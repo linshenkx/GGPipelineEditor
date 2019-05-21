@@ -8,7 +8,7 @@ import { Input} from 'antd';
 
 import {stepUtil} from "../../util/StepUtil"
 const { TextArea } = Input;
-class ShellScriptStepEditor extends React.Component {
+class GitStepEditor extends React.Component {
 
     textChanged = (name,targetValue) => {
 
@@ -19,7 +19,7 @@ class ShellScriptStepEditor extends React.Component {
         if(model.myProps&&model.myProps.step){
             step=model.myProps.step;
         }else {
-            step=stepUtil.getDefaultStep(ShellScriptStepEditor.stepType);
+            step=stepUtil.getDefaultStep(GitStepEditor.stepType);
         }
 
         step=setArg(step,name,targetValue);
@@ -39,26 +39,42 @@ class ShellScriptStepEditor extends React.Component {
         let {model}=item;
         let step=stepUtil.getStepFromModel(model);
         if(!step){
-            step=stepUtil.getDefaultStep(ShellScriptStepEditor.stepType);
+            step=stepUtil.getDefaultStep(GitStepEditor.stepType);
         }
         return <div className="wrapper">
         <div className="stage">
             <div className="text">step类型:{step.name}</div>
         </div>
-            <div>shell 脚本：
+            <div>url(必填)：
                 <TextArea
                     className="editor-step-detail-script"
-                    defaultValue={getArg(step,"script").value}
-                    onChange={e => this.textChanged("script",e.target.value)}
-                    rows={10}
+                    defaultValue={getArg(step,"url").value}
+                    onChange={e => this.textChanged("url",e.target.value)}
+                    rows={1}
+                />
+            </div>
+            <div>branch：
+                <TextArea
+                    className="editor-step-detail-script"
+                    defaultValue={getArg(step,"branch").value}
+                    onChange={e => this.textChanged("branch",e.target.value)}
+                    rows={1}
+                />
+            </div>
+            <div>credentialsId：
+                <TextArea
+                    className="editor-step-detail-script"
+                    defaultValue={getArg(step,"credentialsId").value}
+                    onChange={e => this.textChanged("credentialsId",e.target.value)}
+                    rows={1}
                 />
             </div>
         </div>;
     }
 }
-export default withPropsAPI(ShellScriptStepEditor);
-ShellScriptStepEditor.propTypes = {
+export default withPropsAPI(GitStepEditor);
+GitStepEditor.propTypes = {
     onChange: PropTypes.func,
 };
 
-ShellScriptStepEditor.stepType = 'sh'; // FIXME do this a better way
+GitStepEditor.stepType = 'git'; // FIXME do this a better way
