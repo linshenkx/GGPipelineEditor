@@ -26,12 +26,27 @@ const Option = Select.Option;
 
 class StepEditor extends React.Component {
 
-    getAgentEditor=(agent)=>{
-        console.log("选择agent:"+agent);
+    getAgentEditor=(agent,stageId)=>{
+        console.log("agent:"+agent);
+
+        this.setAgentType(stageId,agent);
         let agentEditor;
         switch (agent) {
             case "docker":
-                agentEditor=<DockerAgent />;break;
+                agentEditor=<div>
+                    <div>Image:
+                        <Input
+                            defaultValue={this.getAgentArg(stageId,"image")}
+                            onChange={e => this.setAgentArg(stageId,"image",e.target.value)}
+                        />
+                    </div>
+                    <div>Args:
+                        <Input
+                            defaultValue={this.getAgentArg(stageId,"args")}
+                            onChange={e => this.setAgentArg(stageId,"args",e.target.value)}
+                        />
+                    </div>
+                </div>;break;
             case "any":
                 agentEditor=<div></div>;break;
             default:
@@ -57,12 +72,18 @@ class StepEditor extends React.Component {
 
         propsAPI.update(item,model);
 
-        this.render();
+        this.setState({});
     };
-
-    setAgent=(stageId,agentType,key,value)=>{
+    setAgentType=(stageId,agentType)=>{
         let stage= jenkinsContext.stageMap.get(stageId);
         stage.agent.type=agentType;
+        jenkinsContext.stageMap.set(stageId,stage);
+    };
+    setAgentArg=(stageId,key,value)=>{
+        let stage= jenkinsContext.stageMap.get(stageId);
+        stage.agent.arguments=stage.agent.arguments.filter((currentValue)=>{
+            return currentValue.key!==key;
+        });
         stage.agent.arguments.push({
             key: key,
             value: {
@@ -71,6 +92,26 @@ class StepEditor extends React.Component {
             },
         });
         jenkinsContext.stageMap.set(stageId,stage);
+    };
+
+    getAgentType=(stageId)=>{
+        let stage= jenkinsContext.stageMap.get(stageId);
+        if(stage){
+            return stage.agent.type;
+        }
+    };
+
+    getAgentArg=(stageId,key)=>{
+        let stage= jenkinsContext.stageMap.get(stageId);
+        console.log("stage json:"+JSON.stringify(stage));
+        if(stage){
+            let arg=stage.agent.arguments.filter((currentValue)=>{
+                return currentValue.key===key;
+            })[0];
+            if(arg){
+                return arg.value.value;
+            }
+        }
     };
 
     setEnvironment=(stageId,envList)=>{
@@ -130,7 +171,8 @@ class StepEditor extends React.Component {
             case 'git':stepEditorDetail=<GitStepEditor/>;break;
             default:stepEditorDetail=<div>空白编辑区 </div>;break;
         }
-        let agentEditor=this.getAgentEditor(this.state.agent);
+        console.log("before return this.getAgentType(stageId):"+this.getAgentType(stageId));
+        let agentEditor=this.getAgentEditor(this.getAgentType(stageId),stageId);
         return <div className="wrapper">
                 <div className="stage">
                     <div className="text">
@@ -143,39 +185,20 @@ class StepEditor extends React.Component {
 
                 <div className="agent">
                     <div className="text">代理</div>
-                    <Select defaultValue='any' style={{ width: 120 }} className="Select"
+                    <Select defaultValue={this.getAgentType(stageId)} style={{ width: 120 }} className="Select"
                             onChange={
                                 (option)=>{
-                                    agentEditor=this.getAgentEditor(option);
-                                    if(option==='any'){
-                                        console.log('你选中any')
-                                        this.setState({
-                                            agent:'any'
-                                        })
-                                    }
-                                    if(option==='none'){
-                                        console.log('你选中none')
-                                    }
-                                    if(option==='docker'){
-                                        console.log('你选中docker')
-                                        this.setState({
-                                            agent:'docker'
-                                        })
-                                    }
-                                    // let dockerAgent= document.getElementById('agent-docker');
-                                    // dockerAgent.style.display='none';
+                                    agentEditor=this.getAgentEditor(option,stageId);
+                                    this.setState({});
                                 }
                             }>
                         <Option value="any">any</Option>
                         <Option value="docker">docker</Option>
                     </Select>
                     {agentEditor}
-                    {/* <div id={'agent-docker'}>agent-docker </div>
-                    <div id={'agent-none'}>agent-none </div>
-                    <div id={'agent-any'}>agent-any </div> */}
                 </div>
 
-                
+
             <div className="evironment">
                     <div className="text">环境变量</div>
                     <Test />
@@ -184,6 +207,7 @@ class StepEditor extends React.Component {
 
     }
 }
+
 export default withPropsAPI(StepEditor);
 
 

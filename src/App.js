@@ -90,6 +90,10 @@ class App extends React.Component {
                 // });
                 console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
 
+                console.log("JenkinsContext json:"+JSON.stringify(jenkinsContext));
+                jenkinsContext.stageMap="new Map([])";
+                console.log("jenkinsContext.stageMap:"+JSON.stringify(jenkinsContext.stageMap));
+                console.log("jenkinsContext.stageMap type:"+typeof jenkinsContext.stageMap);
                 // let defaultStage= pipelineStore.createSequentialStage("firstStage");
                 // console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
                 //

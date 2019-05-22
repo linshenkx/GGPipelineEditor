@@ -1,9 +1,13 @@
-import pipelineStore from "../service/PipelineStore";
+import pipelineStore, {UnknownSection} from "../service/PipelineStore";
+import type {EnvironmentEntryInfo, StepInfo} from "../service/PipelineStore";
+
+
 
 class JenkinsContext {
     stageMap=new Map();
     currentStageId;
 }
+
 
 const jenkinsContext = new JenkinsContext();
 
