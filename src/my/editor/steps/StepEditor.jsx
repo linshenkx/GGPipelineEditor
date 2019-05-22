@@ -16,6 +16,7 @@ import DockerAgent from './DockerAgent'
 
 // import Button from 'antd/lib/button';
 import {stepUtil} from "../../util/StepUtil"
+import {stageUtil} from "../../util/StageUtil"
 import jenkinsContext from "../../util/JenkinsContext"
 import pipelineStore from "../../service/PipelineStore";
 import {convertInternalModelToJson} from "../../service/PipelineSyntaxConverter";
@@ -26,41 +27,10 @@ const Option = Select.Option;
 
 class StepEditor extends React.Component {
 
-    getAgentEditor=(agent,stageId)=>{
-        console.log("agent:"+agent);
-
-        this.setAgentType(stageId,agent);
-        let agentEditor;
-        switch (agent) {
-            case "docker":
-                agentEditor=<div>
-                    <div>Image:
-                        <Input
-                            defaultValue={this.getAgentArg(stageId,"image")}
-                            onChange={e => this.setAgentArg(stageId,"image",e.target.value)}
-                        />
-                    </div>
-                    <div>Args:
-                        <Input
-                            defaultValue={this.getAgentArg(stageId,"args")}
-                            onChange={e => this.setAgentArg(stageId,"args",e.target.value)}
-                        />
-                    </div>
-                </div>;break;
-            case "any":
-                agentEditor=<div></div>;break;
-            default:
-                agentEditor=<div></div>;break;
-        }
-        return agentEditor;
-    };
-    state = {
-      agent:'any'
-    };
     newStage=()=>{
         console.log("新建Stage");
         let newStage= pipelineStore.createNoneStage("newStage");
-        jenkinsContext.stageMap.set(newStage.id,newStage);
+        jenkinsContext.stageMap[newStage.id]=newStage;
         jenkinsContext.currentStageId=newStage.id;
 
         const { propsAPI } = this.props;
@@ -72,61 +42,35 @@ class StepEditor extends React.Component {
 
         propsAPI.update(item,model);
 
-        this.setState({});
-    };
-    setAgentType=(stageId,agentType)=>{
-        let stage= jenkinsContext.stageMap.get(stageId);
-        stage.agent.type=agentType;
-        jenkinsContext.stageMap.set(stageId,stage);
-    };
-    setAgentArg=(stageId,key,value)=>{
-        let stage= jenkinsContext.stageMap.get(stageId);
-        stage.agent.arguments=stage.agent.arguments.filter((currentValue)=>{
-            return currentValue.key!==key;
-        });
-        stage.agent.arguments.push({
-            key: key,
-            value: {
-                isLiteral: true,
-                value: value,
-            },
-        });
-        jenkinsContext.stageMap.set(stageId,stage);
     };
 
-    getAgentType=(stageId)=>{
-        let stage= jenkinsContext.stageMap.get(stageId);
-        if(stage){
-            return stage.agent.type;
+    getAgentEditor=(agent,stageId)=>{
+        console.log("agent:"+agent);
+
+        stageUtil.setAgentType(stageId,agent);
+        let agentEditor;
+        switch (agent) {
+            case "docker":
+                agentEditor=<div>
+                    <div>Image:
+                        <Input
+                            defaultValue={stageUtil.getAgentArg(stageId,"image")}
+                            onChange={e => stageUtil.setAgentArg(stageId,"image",e.target.value)}
+                        />
+                    </div>
+                    <div>Args:
+                        <Input
+                            defaultValue={stageUtil.getAgentArg(stageId,"args")}
+                            onChange={e => stageUtil.setAgentArg(stageId,"args",e.target.value)}
+                        />
+                    </div>
+                </div>;break;
+            case "any":
+                agentEditor=<div></div>;break;
+            default:
+                agentEditor=<div></div>;break;
         }
-    };
-
-    getAgentArg=(stageId,key)=>{
-        let stage= jenkinsContext.stageMap.get(stageId);
-        console.log("stage json:"+JSON.stringify(stage));
-        if(stage){
-            let arg=stage.agent.arguments.filter((currentValue)=>{
-                return currentValue.key===key;
-            })[0];
-            if(arg){
-                return arg.value.value;
-            }
-        }
-    };
-
-    setEnvironment=(stageId,envList)=>{
-        let stage= jenkinsContext.stageMap.get(stageId);
-        stage.environment=[];
-        envList.forEach((env)=>{
-            stage.environment.push({
-                key: env.key,
-                value: {
-                    isLiteral: true,
-                    value: env.value,
-                },
-            });
-        });
-        jenkinsContext.stageMap.set(stageId,stage);
+        return agentEditor;
     };
 
 
@@ -162,7 +106,7 @@ class StepEditor extends React.Component {
             propsAPI.update(item,model);
         }
 
-        let stage=jenkinsContext.stageMap.get(stageId);
+        let stage=jenkinsContext.stageMap[stageId];
 
         let stepEditorDetail;
         switch (stepType) {
@@ -171,13 +115,13 @@ class StepEditor extends React.Component {
             case 'git':stepEditorDetail=<GitStepEditor/>;break;
             default:stepEditorDetail=<div>空白编辑区 </div>;break;
         }
-        console.log("before return this.getAgentType(stageId):"+this.getAgentType(stageId));
-        let agentEditor=this.getAgentEditor(this.getAgentType(stageId),stageId);
+        console.log("before return this.getAgentType(stageId):"+stageUtil.getAgentType(stageId));
+        let agentEditor=this.getAgentEditor(stageUtil.getAgentType(stageId),stageId);
         return <div className="wrapper">
                 <div className="stage">
                     <div className="text">
                         当前Stage:{stageType}:{stage.name}
-                        <button onClick={this.newStage}>新stage</button>
+                        <button onClick={()=>{this.newStage();this.setState({});}}>新stage</button>
                     </div>
                 </div>
 
@@ -185,7 +129,7 @@ class StepEditor extends React.Component {
 
                 <div className="agent">
                     <div className="text">代理</div>
-                    <Select defaultValue={this.getAgentType(stageId)} style={{ width: 120 }} className="Select"
+                    <Select defaultValue={stageUtil.getAgentType(stageId)} style={{ width: 120 }} className="Select"
                             onChange={
                                 (option)=>{
                                     agentEditor=this.getAgentEditor(option,stageId);
