@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { getArg, setArg } from '../../service/ArgService';
 import { withPropsAPI } from 'gg-editor';
 import './ShellScriptStepEditor.css';
-import Test from '../../../test'
+import EnvironmentEditor from './environmentEditor'
 import 'antd/dist/antd.css';
 import { Input,Select} from 'antd';
 import ShellScriptStepEditor from './ShellScriptStepEditor'
@@ -77,9 +77,6 @@ class StepEditor extends React.Component {
 
 
     render() {
-
-
-
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
         let {model}=item;
@@ -131,7 +128,8 @@ class StepEditor extends React.Component {
                 <div className="stage">
                     <div className="text">
                         当前Stage:{stageType}:{stage.name}
-                        <button onClick={()=>{this.newStage();this.setState({});}}>新stage</button>
+                
+                        <button onClick={()=>{this.newStage();this.setState({});console.log(stageUtil.getEnvironment(stageId))}}>新stage</button>
                     </div>
                 </div>
 
@@ -156,7 +154,7 @@ class StepEditor extends React.Component {
             <div className="evironment">
 
                 <div className="text">环境变量</div>
-                    <Test />
+                    <EnvironmentEditor />
                 </div>
             </div>
 
