@@ -34,11 +34,11 @@ class App extends React.Component {
         label: '起止节点',
         x: 55,
         y: 55,
-        id: '00001',
+        id: '00000',
         index: 0,
         myProps:{
-            stepType:'empty',
-            stageType:'leader',
+            stepType:'first',
+            stageType:'first',
             stageId:'00000'
         }
       }],
@@ -83,26 +83,65 @@ class App extends React.Component {
           <Command name="copy" className="item">复制</Command>
           <Command name="paste" className="item">粘贴</Command>
           <SavesButten text="保存" resolveData={
-            (data)=>{console.log("保存:" + JSON.stringify(data));
-                // pipelineStore.setPipeline({
-                //     agent: { type: 'any' },
-                //     children: [],
-                // });
-                console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
+            (data)=>{
+                console.log("保存:" + JSON.stringify(data));
 
-                console.log("JenkinsContext json:"+JSON.stringify(jenkinsContext));
-                console.log("jenkinsContext.stageMap:"+JSON.stringify(jenkinsContext.stageMap));
-                // let defaultStage= pipelineStore.createSequentialStage("firstStage");
-                // console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
-                //
-                // pipelineStore.addStep(defaultStage,null,{
-                //     functionName:"functionName1",
-                //     displayName:"displayName"
-                // });
-                // console.log("pipeline:"+JSON.stringify(pipelineStore.pipeline));
-                // console.log("convertInternalModelToJson:"+convertInternalModelToJson(pipelineStore.pipeline));
-                // let pipelineJsonObject=convertInternalModelToJson(pipelineStore.pipeline);
-                // console.log("pipelineJsonObject json:"+JSON.stringify(pipelineJsonObject));
+                //获取起始节点的stage,完成全局初始化
+                let nodeList= data.nodes;
+                let edgeList= data.edges;
+                let contextNode= nodeList.filter((currentValue)=>{
+                    return currentValue.id==='00000';
+                })[0];
+
+                let contextStage=jenkinsContext.stageMap['00000'];
+
+                console.log("contextStage:"+JSON.stringify(contextStage));
+
+                pipelineStore.setPipeline(JSON.parse(JSON.stringify(contextStage)));
+                console.log("pipelineStore.pipeline:"+JSON.stringify(pipelineStore.pipeline));
+
+                let currentEdges= edgeList.filter((currentValue)=>{
+                    return currentValue.source==='00000';
+                });
+                if(currentEdges.length!==1){
+                    console.log(contextNode.label+"节点"+contextNode.id+"有"+currentEdges.length+"条边！");
+                    return;
+                }
+                let currentEdge=currentEdges[0];
+                let  currentStage=JSON.parse(JSON.stringify(contextStage));
+
+                while (currentEdge){
+                    console.log("currentEdge:"+JSON.stringify(currentEdge));
+
+                    //找出下一节点
+                    let targetId= currentEdge.target;
+                    let currentNode= nodeList.filter((currentValue)=>{
+                        return currentValue.id===targetId;
+                    })[0];
+                    if (!targetId){
+                        break;
+                    }
+                    if(currentNode.myProps.stageType==="leader"){
+                        currentStage=JSON.parse(JSON.stringify(jenkinsContext.stageMap[currentNode.myProps.stageId]));
+                        console.log("addSequentialStage:"+currentStage);
+                        pipelineStore.addSequentialStage(currentStage);
+                    }
+                    console.log("add step:"+JSON.stringify(currentNode.myProps.step));
+                    pipelineStore.addOldStep(currentStage,null,currentNode.myProps.step);
+
+                    let currentEdges= edgeList.filter((currentValue)=>{
+                        return currentValue.source===currentNode.id;
+                    });
+                    if(currentEdges.length!==1){
+                        console.log(currentNode.label+"节点"+currentNode.id+"有"+currentEdges.length+"条边！");
+                        break;
+                    }
+                    currentEdge=currentEdges[0];
+                }
+
+                console.log("convertInternalModelToJson:"+JSON.stringify(convertInternalModelToJson(pipelineStore.pipeline)));
+                console.log("contextStage last:"+JSON.stringify(contextStage));
+
             }
 
           }/>

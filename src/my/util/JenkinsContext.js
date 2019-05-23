@@ -6,7 +6,6 @@ import type {EnvironmentEntryInfo, StepInfo} from "../service/PipelineStore";
 class JenkinsContext {
     stageMap={};
     currentStageId;
-    static id="一个id";
 }
 
 

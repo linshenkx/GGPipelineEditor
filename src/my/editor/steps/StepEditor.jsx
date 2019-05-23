@@ -29,13 +29,14 @@ class StepEditor extends React.Component {
 
     newStage=()=>{
         console.log("新建Stage");
-        let newStage= pipelineStore.createNoneStage("newStage");
-        jenkinsContext.stageMap[newStage.id]=newStage;
-        jenkinsContext.currentStageId=newStage.id;
 
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
         let {model}=item;
+
+        let newStage= pipelineStore.createNoneStage("newStage");
+        jenkinsContext.stageMap[newStage.id]=newStage;
+        jenkinsContext.currentStageId=newStage.id;
 
         model=stepUtil.setStageIdToModel(model,newStage.id);
         model=stepUtil.setStageTypeToModel(model,'leader');
@@ -76,23 +77,32 @@ class StepEditor extends React.Component {
 
 
     render() {
+
+
+
         const { propsAPI } = this.props;
         let item=propsAPI.getSelected()[0];
         let {model}=item;
-        let step=stepUtil.getStepFromModel(model);
-        if(!step){
-            step=stepUtil.getDefaultStep(ShellScriptStepEditor.stepType);
+
+        let stepType=stepUtil.getStepTypeFromModel(model);
+
+        if(jenkinsContext.currentStageId==='00000'&&stepType!=='first'){
+            let newStage= pipelineStore.createNoneStage("newStage");
+            jenkinsContext.stageMap[newStage.id]=newStage;
+            jenkinsContext.currentStageId=newStage.id;
+
+            model=stepUtil.setStageIdToModel(model,newStage.id);
+            model=stepUtil.setStageTypeToModel(model,'leader');
+
+            propsAPI.update(item,model);
         }
         let stageId=stepUtil.getStageIdFromModel(model);
         let stageType=stepUtil.getStageTypeFromModel(model);
-        let stepType=stepUtil.getStepTypeFromModel(model);
 
-        if(!stepType){
-            stepType='empty';
-        }
         if(!stageType){
             //新stageType默认为follower
             stageType='follower';
+            stepUtil.setStageTypeToModel(model,stageType);
         }
         if(!stageId){
             //新stageId默认为当前StageId
@@ -144,7 +154,8 @@ class StepEditor extends React.Component {
 
 
             <div className="evironment">
-                    <div className="text">环境变量</div>
+
+                <div className="text">环境变量</div>
                     <Test />
                 </div>
             </div>

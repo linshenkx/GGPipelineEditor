@@ -195,6 +195,12 @@ class PipelineStore {
             steps: [],
         };
     }
+    addSequentialStage(stage: StageInfo) {
+        const { pipeline } = this;
+        pipeline.children = [...pipeline.children, stage];
+        this.notify();
+        return stage;
+    }
 
     createSequentialStage(name: string) {
         const { pipeline } = this;

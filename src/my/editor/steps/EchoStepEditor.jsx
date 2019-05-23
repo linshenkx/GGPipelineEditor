@@ -40,6 +40,8 @@ class EchoStepEditor extends React.Component {
         let step=stepUtil.getStepFromModel(model);
         if(!step){
             step=stepUtil.getDefaultStep(EchoStepEditor.stepType);
+            model=stepUtil.setStepToModel(model,step);
+            propsAPI.update(item,model);
         }
         return <div className="wrapper">
         <div className="stage">
