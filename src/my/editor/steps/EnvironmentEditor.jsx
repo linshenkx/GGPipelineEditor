@@ -103,15 +103,16 @@ class EnvironmentEditor extends React.Component {
             title: "变量名",
             dataIndex: "key",
             width: "30%",
-            editable: true
+            editable: !this.props.disabled
         },
         {
             title: "变量值",
             dataIndex: "value.value",
-            editable: true
+            editable: !this.props.disabled
         },
         {
             title: (<Button
+            disabled={this.props.disabled}
                 onClick={()=>this.handleAdd()}
                 type="primary"
                 style={{ marginBottom: 10 }}
@@ -122,13 +123,14 @@ class EnvironmentEditor extends React.Component {
             render: (text, record) =>
                 stageUtil.getEnvironment(this.props.stageId).length >= 1 ? (
                     <Popconfirm
+                        
                         title="Sure to delete?"
                         onConfirm={() =>{ this.handleDelete(record.key);
                             console.log("text :"+text);
                             console.log("record json:"+JSON.stringify(record));
                         }}
                     >
-                        <a href="javascript:;">Delete</a>
+                        <Button type='primary' disabled={this.props.disabled} >Delete</Button>
                     </Popconfirm>
                 ) : null
         }
@@ -201,6 +203,7 @@ class EnvironmentEditor extends React.Component {
           dataSource={envList}
           columns={columns}
           pagination={paginationProps}
+          
         />
       </div>
     );
@@ -209,4 +212,5 @@ class EnvironmentEditor extends React.Component {
 export default EnvironmentEditor;
 EnvironmentEditor.propTypes = {
     stageId: PropTypes.number,
+    disabled:PropTypes.bool
 };
