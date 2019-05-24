@@ -107,17 +107,14 @@ class App extends React.Component {
             <Command name="undo" className="item">
               撤销
             </Command>
-            <Command name="redo" className="item">
-              重做
-            </Command>
             <Command name="delete" className="item">
               删除
             </Command>
-            <br />
-            <br />
             <Command name="zoomIn" className="item">
               放大
             </Command>
+            <br />
+            <br />
             <Command name="zoomOut" className="item">
               缩小
             </Command>
@@ -256,7 +253,7 @@ class App extends React.Component {
                   stepType: "echo"
                 }
               }}
-              src="http://prsv4ko2y.bkt.clouddn.com/printMessage.svg"
+              src="http://prsv4ko2y.bkt.clouddn.com/echo.svg"
             />
             <Item
               type="node"
