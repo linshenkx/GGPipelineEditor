@@ -93,10 +93,8 @@ class App extends React.Component {
             <Option value="caseH">类型3</Option>
           </Select>
           <Input size="large" placeholder="URL" />
-          <Input size="large" placeholder="URL" id="todoCheck"/>
-          <Checkbox onChange={onChange}>
-            保存自动运行
-          </Checkbox>
+          <Input size="large" placeholder="URL" id="todoCheck" />
+          <Checkbox onChange={onChange}>保存自动运行</Checkbox>
         </div>
         <GGEditor className="GGEditor">
           <Toolbar className="Toolbar">
@@ -239,7 +237,7 @@ class App extends React.Component {
               size="72*72"
               shape="flow-circle"
               model={{
-                color: "#FA8C16",
+                color: "red",
                 label: "shellScript",
                 myProps: {
                   stepType: "sh"
@@ -252,7 +250,7 @@ class App extends React.Component {
               size="72*72"
               shape="flow-circle"
               model={{
-                color: "#FA8C16",
+                color: "green",
                 label: "echo",
                 myProps: {
                   stepType: "echo"
@@ -265,7 +263,7 @@ class App extends React.Component {
               size="72*72"
               shape="flow-circle"
               model={{
-                color: "#FA8C16",
+                color: "blue",
                 label: "git",
                 myProps: {
                   stepType: "git"
@@ -285,15 +283,24 @@ class App extends React.Component {
             getSelected={e => {
               console.log("点击选中" + e);
             }}
+            onDrop={e => {
+              console.log("放置节点");
+              // console.log(e.item.model);
+            }}
+            onAfterItemSelected={e=>{
+              console.log("选中后");
+              console.log(e.item.model);
+              if (e.item.model.myProps.stageType === "leader") {
+                e.item.model.color = "red";
+              }
+              if (e.item.model.myProps.stageType === "follower") {
+                e.item.model.color = "green";
+              }
+            }}
             onNodeClick={e => {
               console.log("点击节点");
               console.log(e.item.model);
-              if (e.item.model.label === "shellScript") {
-                e.item.model.color = "#00A1F3";
-              }
-              if (e.item.model.label === "print") {
-                e.item.model.color = "#FF0066";
-              }
+              
             }}
             onEdgeClick={e => {
               console.log("点击边线");

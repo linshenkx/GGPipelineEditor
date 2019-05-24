@@ -35,7 +35,7 @@
 .GGEditor{
   display: flex;
   flex-direction: row;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 .ItemPanel{
   display: flex;
@@ -73,7 +73,7 @@
 
 .Homeuser{
   position: absolute;
-  top: 2px;
+  top: 20px;
   left: 0;
   /* border: 1px solid red; */
 }
@@ -89,6 +89,7 @@
 .navInput{
   text-align: left;
   padding-left: 12vw;
+  margin-top: 20px;
 }
 .navInput Input{
   width: 180px;
