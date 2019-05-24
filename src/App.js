@@ -12,8 +12,6 @@ import GGEditor, {
 } from 'gg-editor';
 import 'antd/dist/antd.css';
 import { Input,Button } from 'antd';
-import ShellScriptStepEditor from './my/editor/steps/ShellScriptStepEditor'
-import idgen from './my/service/IdGenerator'
 import SavesButten from './my/component/PropsButten'
 import pipelineStore from './my/service/PipelineStore'
 import {convertInternalModelToJson} from './my/service/PipelineSyntaxConverter'
@@ -39,7 +37,7 @@ class App extends React.Component {
         myProps:{
             stepType:'first',
             stageType:'first',
-            stageId:'00000'
+            stageId:9999
         }
       }],
       // edges: [{
@@ -93,7 +91,7 @@ class App extends React.Component {
                     return currentValue.id==='00000';
                 })[0];
 
-                let contextStage=jenkinsContext.stageMap['00000'];
+                let contextStage=jenkinsContext.stageMap[9999];
 
                 console.log("contextStage:"+JSON.stringify(contextStage));
 
@@ -112,7 +110,6 @@ class App extends React.Component {
 
                 while (currentEdge){
                     console.log("currentEdge:"+JSON.stringify(currentEdge));
-
                     //找出下一节点
                     let targetId= currentEdge.target;
                     let currentNode= nodeList.filter((currentValue)=>{

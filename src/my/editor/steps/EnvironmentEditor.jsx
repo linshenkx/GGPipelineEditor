@@ -1,10 +1,9 @@
 /* eslint-disable react/react-in-jsx-scope */
 import React from "react";
-import { withPropsAPI } from "gg-editor";
 import { Table, Input, Button, Popconfirm, Form } from "antd";
 
-import { stepUtil } from "../../util/StepUtil";
 import { stageUtil } from "../../util/StageUtil";
+import PropTypes from "prop-types";
 const EditableContext = React.createContext();
 
 const EditableRow = ({ form, index, ...props }) => (
@@ -98,93 +97,80 @@ class EditableCell extends React.Component {
   }
 }
 
-class environmentEditor extends React.Component {
-  constructor(props) {
-    super(props);
-    this.columns = [
-      {
-        title: "变量名",
-        dataIndex: "name",
-        width: "30%",
-        editable: true
-      },
-      {
-        title: "变量值",
-        dataIndex: "value",
-        editable: true
-      },
-      {
-        title: "operation",
-        dataIndex: "operation",
-        render: (text, record) =>
-          this.state.dataSource.length >= 1 ? (
-            <Popconfirm
-              title="Sure to delete?"
-              onConfirm={() => this.handleDelete(record.key)}
+class EnvironmentEditor extends React.Component {
+    columns = [
+        {
+            title: "变量名",
+            dataIndex: "key",
+            width: "30%",
+            editable: true
+        },
+        {
+            title: "变量值",
+            dataIndex: "value.value",
+            editable: true
+        },
+        {
+            title: (<Button
+                onClick={()=>this.handleAdd()}
+                type="primary"
+                style={{ marginBottom: 10 }}
             >
-              <a href="javascript:;">Delete</a>
-            </Popconfirm>
-          ) : null
-      }
+                添加
+            </Button>),
+            dataIndex: "operation",
+            render: (text, record) =>
+                stageUtil.getEnvironment(this.props.stageId).length >= 1 ? (
+                    <Popconfirm
+                        title="Sure to delete?"
+                        onConfirm={() =>{ this.handleDelete(record.key);
+                            console.log("text :"+text);
+                            console.log("record json:"+JSON.stringify(record));
+                        }}
+                    >
+                        <a href="javascript:;">Delete</a>
+                    </Popconfirm>
+                ) : null
+        }
     ];
 
-    this.state = {
-      dataSource: [
-        {
-          // key: '0',
-          // name: 'Java',
-          // value: '32',
-        }
-      ],
-      count: 1
-    };
-  }
-
   handleDelete = key => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+      console.log("handleDelete:"+key);
+
+      stageUtil.delEnvByKey(this.props.stageId,key);
+      this.setState({});
+
   };
 
   handleAdd = () => {
-    const { count, dataSource } = this.state;
-    const newData = {
-      key: count,
-      name: `default`,
-      value: "0"
-    };
-    this.setState({
-      dataSource: [...dataSource, newData],
-      count: count + 1
-    });
+      console.log(
+          "当前的环境变量" + JSON.stringify(stageUtil.getEnvironment(this.props.stageId))
+      );
+      console.log("handleAdd");
+      stageUtil.addEnvironment(this.props.stageId,"defaultKey","defaultValue");
+      console.log(
+          "当前的环境变量" + JSON.stringify(stageUtil.getEnvironment(this.props.stageId))
+      );
+      this.setState({});
+
   };
 
   handleSave = row => {
-    const newData = [...this.state.dataSource];
-    const index = newData.findIndex(item => row.key === item.key);
-    const item = newData[index];
-    newData.splice(index, 1, {
-      ...item,
-      ...row
-    });
-    this.setState({ dataSource: newData });
+      console.log("handleSave row json:"+JSON.stringify(row));
+
+      stageUtil.updateEnv(this.props.stageId,row.id, row.key,row.value.value);
+      this.setState({});
   };
 
   render() {
-    const { propsAPI } = this.props;
-    let item = propsAPI.getSelected()[0];
-    let { model } = item;
-    let stageId = stepUtil.getStageIdFromModel(model);
-    console.log("当前的stageId" + stageId);
-    console.log(stageUtil.getEnvironment(stageId));
+      let stageId=this.props.stageId;
+    console.log("当前的stageId：" + stageId);
 
     console.log(
-      "当前的变量" + JSON.stringify(stageUtil.getEnvironment(stageId))
+      "当前的环境变量" + JSON.stringify(stageUtil.getEnvironment(stageId))
     );
 
-    stageUtil.setEnvironment(stageId, this.state.dataSource);
-    console.log(stageUtil.getEnvironment(stageId));
-
-    const { dataSource } = this.state;
+    let envList = stageUtil.getEnvironment((stageId));
     const components = {
       body: {
         row: EditableFormRow,
@@ -208,18 +194,11 @@ class environmentEditor extends React.Component {
     });
     return (
       <div>
-        <Button
-          onClick={this.handleAdd}
-          type="primary"
-          style={{ marginBottom: 16 }}
-        >
-          添加环境变量
-        </Button>
+
         <Table
           components={components}
           rowClassName={() => "editable-row"}
-          bordered
-          dataSource={dataSource}
+          dataSource={envList}
           columns={columns}
           pagination={paginationProps}
         />
@@ -227,4 +206,7 @@ class environmentEditor extends React.Component {
     );
   }
 }
-export default withPropsAPI(environmentEditor);
+export default EnvironmentEditor;
+EnvironmentEditor.propTypes = {
+    stageId: PropTypes.number,
+};

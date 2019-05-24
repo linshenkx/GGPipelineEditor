@@ -1,26 +1,19 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { getArg, setArg } from '../../service/ArgService';
 import { withPropsAPI } from 'gg-editor';
 import './ShellScriptStepEditor.css';
-import EnvironmentEditor from './environmentEditor'
+import EnvironmentEditor from './EnvironmentEditor'
 import 'antd/dist/antd.css';
 import { Input,Select} from 'antd';
 import ShellScriptStepEditor from './ShellScriptStepEditor'
 import EchoStepEditor from './EchoStepEditor'
 import GitStepEditor from './GitStepEditor'
-import AnyAgent from './AnyAgent'
-import DockerAgent from './DockerAgent'
 
 
 
-// import Button from 'antd/lib/button';
 import {stepUtil} from "../../util/StepUtil"
 import {stageUtil} from "../../util/StageUtil"
 import jenkinsContext from "../../util/JenkinsContext"
 import pipelineStore from "../../service/PipelineStore";
-import {convertInternalModelToJson} from "../../service/PipelineSyntaxConverter";
-const { TextArea } = Input;
 const Option = Select.Option;
 
 
@@ -83,7 +76,7 @@ class StepEditor extends React.Component {
 
         let stepType=stepUtil.getStepTypeFromModel(model);
 
-        if(jenkinsContext.currentStageId==='00000'&&stepType!=='first'){
+        if(jenkinsContext.currentStageId=== 9999 &&stepType!=='first'){
             let newStage= pipelineStore.createNoneStage("newStage");
             jenkinsContext.stageMap[newStage.id]=newStage;
             jenkinsContext.currentStageId=newStage.id;
@@ -127,8 +120,7 @@ class StepEditor extends React.Component {
         return <div className="wrapper">
                 <div className="stage">
                     <div className="text">
-                        当前Stage:{stageType}:{stage.name}
-                
+                        当前Stage:{stageType}:<Input defaultValue={stage.name} onChange={(e)=>{jenkinsContext.stageMap[stageId].name=e.target.value}} />
                         <button onClick={()=>{this.newStage();this.setState({});console.log(stageUtil.getEnvironment(stageId))}}>新stage</button>
                     </div>
                 </div>
@@ -154,7 +146,7 @@ class StepEditor extends React.Component {
             <div className="evironment">
 
                 <div className="text">环境变量</div>
-                    <EnvironmentEditor />
+                    <EnvironmentEditor stageId={stageId} />
                 </div>
             </div>
 

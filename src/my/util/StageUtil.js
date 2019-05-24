@@ -1,6 +1,7 @@
 import pipelineStore from "../service/PipelineStore";
 import jenkinsContext from "./JenkinsContext";
 import { stepUtil } from "./StepUtil";
+import idgen from "../service/IdGenerator"
 
 class StageUtil {
   setAgentType = (stageId, agentType) => {
@@ -43,26 +44,77 @@ class StageUtil {
     }
   };
 
-  setEnvironment = (stageId, envList) => {
-    let stage = jenkinsContext.stageMap[stageId];
-    stage.environment = [];
-    envList.forEach(env => {
-      stage.environment.push({
-        key: env.name,
-        value: {
-          isLiteral: true,
-          value: env.value
-        }
-      });
-    });
-    // stage.environment.push(envList)
-    jenkinsContext.stageMap[stageId] = stage;
-  };
+
 
   getEnvironment = stageId => {
-    let { environment } = jenkinsContext.stageMap[stageId];
-    return environment ? environment : [];
+      console.log("getEnvironment jenkinsContext.stageMap[stageId]:"+JSON.stringify(jenkinsContext.stageMap[stageId]));
+
+      let { environment } = jenkinsContext.stageMap[stageId];
+      console.log("getEnvironment environment:"+JSON.stringify(environment));
+
+      if(environment){
+        return environment;
+    }else {
+        jenkinsContext.stageMap[stageId].environment=[];
+        return jenkinsContext.stageMap[stageId].environment;
+
+    }
+
   };
+
+  addEnvironment=(stageId,envKey,envValue)=>{
+      console.log(stageId,envKey,envValue);
+      let { environment } = jenkinsContext.stageMap[stageId];
+      if(environment){
+          console.log("environment json:"+JSON.stringify(environment));
+          environment=environment.filter((currentValue)=>{
+              return currentValue.key!==envKey;
+          });
+      }else {
+          environment=[];
+      }
+
+      environment.push({
+          id:idgen.next(),
+          key: envKey,
+          value: {
+              isLiteral: true,
+              value: envValue
+          }
+      });
+      jenkinsContext.stageMap[stageId].environment=environment;
+  };
+
+  updateEnv=(stageId,envId,envKey,envValue)=>{
+      let { environment } = jenkinsContext.stageMap[stageId];
+      if(!environment){
+          return;
+      }
+      jenkinsContext.stageMap[stageId].environment=environment.map((currentValue)=>{
+          if(currentValue.id===envId){
+              currentValue.key=envKey;
+              currentValue.value.value=envValue;
+          }
+          return currentValue;
+      });
+      console.log("after updateEnv:"+JSON.stringify(jenkinsContext.stageMap[stageId].environment));
+      console.log(
+          "after updateEnv当前的环境变量" + JSON.stringify(stageUtil.getEnvironment(stageId))
+      );
+  };
+
+  delEnvByKey=(stageId,envKey)=>{
+      console.log("delEnvByKey",stageId,envKey);
+      let { environment } = jenkinsContext.stageMap[stageId];
+      if(!environment){
+          return;
+      }
+      jenkinsContext.stageMap[stageId].environment= environment.filter((currentValue)=>{
+          return currentValue.key!==envKey;
+      });
+
+  };
+
 }
 
 export const stageUtil = new StageUtil();
