@@ -2,7 +2,7 @@ import React from 'react';
 import {withPropsAPI} from 'gg-editor'
 import {Button} from "antd";
 import PropTypes from "prop-types";
-
+import '../editor/steps/StepEditor.css'
 class SavesButten extends React.Component {
 
     handleSaveClick = () => {
@@ -14,7 +14,7 @@ class SavesButten extends React.Component {
     };
 
     render() {
-        return<Button onClick={this.handleSaveClick} size="large">{this.props.text}</Button>
+        return<Button id="saveBtn" type="primary" onClick={this.handleSaveClick} size="large">{this.props.text}</Button>
     }
 }
 SavesButten.propTypes = {

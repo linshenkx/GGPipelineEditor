@@ -1,9 +1,10 @@
 import React from 'react';
 import { withPropsAPI } from 'gg-editor';
 import './ShellScriptStepEditor.css';
+import './StepEditor.css';
 import EnvironmentEditor from './EnvironmentEditor'
 import 'antd/dist/antd.css';
-import { Input,Select} from 'antd';
+import { Input,Select,Button} from 'antd';
 import ShellScriptStepEditor from './ShellScriptStepEditor'
 import EchoStepEditor from './EchoStepEditor'
 import GitStepEditor from './GitStepEditor'
@@ -120,8 +121,8 @@ class StepEditor extends React.Component {
         return <div className="wrapper">
                 <div className="stage">
                     <div className="text">
-                        当前Stage:{stageType}:<Input defaultValue={stage.name} onChange={(e)=>{jenkinsContext.stageMap[stageId].name=e.target.value}} />
-                        <button onClick={()=>{this.newStage();this.setState({});console.log(stageUtil.getEnvironment(stageId))}}>新stage</button>
+                        当前Stage:{stageType}:<Input defaultValue={stage.name} onChange={(e)=>{jenkinsContext.stageMap[stageId].name=e.target.value}} id='stateInput'/>
+                        <Button type='primary' onClick={()=>{this.newStage();this.setState({});console.log(stageUtil.getEnvironment(stageId))}}>新stage</Button>
                     </div>
                 </div>
 
