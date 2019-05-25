@@ -88,11 +88,12 @@
 }
 .navInput{
   text-align: left;
-  padding-left: 12vw;
+  padding-left: 11vw;
   margin-top: 20px;
 }
 .navInput Input{
-  width: 180px;
+  width: 170px;
+  margin-left: 1%;
 }
 #todoCheck{
   margin-right: 30px;

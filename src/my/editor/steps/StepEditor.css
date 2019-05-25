@@ -1,7 +1,10 @@
 #stateInput{
-    width: 40%;
+    width: 35%;
 }
 #saveBtn{
     position: absolute;
     top: 0;
+}
+#stateInput{
+    margin: 0 10px 0 10px;
 }

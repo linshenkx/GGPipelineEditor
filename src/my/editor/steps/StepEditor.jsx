@@ -4,7 +4,7 @@ import "./ShellScriptStepEditor.css";
 import "./StepEditor.css";
 import EnvironmentEditor from "./EnvironmentEditor";
 import "antd/dist/antd.css";
-import { Input, Select, Button } from "antd";
+import { Input, Select, Button, Alert } from "antd";
 import ShellScriptStepEditor from "./ShellScriptStepEditor";
 import EchoStepEditor from "./EchoStepEditor";
 import GitStepEditor from "./GitStepEditor";
@@ -14,7 +14,7 @@ import { stageUtil } from "../../util/StageUtil";
 import jenkinsContext from "../../util/JenkinsContext";
 import pipelineStore from "../../service/PipelineStore";
 const Option = Select.Option;
-
+const Search = Input.Search;
 class StepEditor extends React.Component {
   newStage = () => {
     console.log("新建Stage");
@@ -160,7 +160,7 @@ class StepEditor extends React.Component {
                 console.log(stageUtil.getEnvironment(stageId));
               }}
             >
-              新stage
+              新建stage
             </Button>
           </div>
         </div>
@@ -168,7 +168,7 @@ class StepEditor extends React.Component {
         {stepEditorDetail}
 
         <div className="agent">
-          <div className="text">代理</div>
+          <Alert message="代理" className="text" type="info" />
           <Select
             defaultValue={stageUtil.getAgentType(stageId)}
             style={{ width: 120 }}
@@ -186,8 +186,11 @@ class StepEditor extends React.Component {
         </div>
 
         <div className="evironment">
-          <div className="text">环境变量</div>
-          <EnvironmentEditor stageId={stageId} disabled={stageType === "follower"}/>
+          <Alert message="环境变量" className="text" type="info" />
+          <EnvironmentEditor
+            stageId={stageId}
+            disabled={stageType === "follower"}
+          />
         </div>
       </div>
     );
