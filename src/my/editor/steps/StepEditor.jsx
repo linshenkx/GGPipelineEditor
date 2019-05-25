@@ -170,7 +170,8 @@ class StepEditor extends React.Component {
         <div className="agent">
           <Alert message="代理" className="text" type="info" />
           <Select
-            defaultValue={stageUtil.getAgentType(stageId)}
+            // defaultValue={stageUtil.getAgentType(stageId)}
+            defaultValue='any'
             style={{ width: 120 }}
             className="Select"
             onChange={option => {

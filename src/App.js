@@ -15,7 +15,7 @@ import GGEditor, {
   CanvasPanel
 } from "gg-editor";
 import "antd/dist/antd.css";
-import { Input, Button, Select, Checkbox, Alert } from "antd";
+import { Input, Button, Select, Checkbox, Alert, message } from "antd";
 import SavesButten from "./my/component/PropsButten";
 import pipelineStore from "./my/service/PipelineStore";
 import { convertInternalModelToJson } from "./my/service/PipelineSyntaxConverter";
@@ -78,11 +78,16 @@ class App extends React.Component {
         .then(res => res.json())
         .then(data => {
           console.log(data);
-          console.log("获取主机名称：" + data.data);
-          _this.setState({
-            isLogin: !_this.state.isLogin,
-            IPaddress: data.data
-          });
+          if (data.code === 200) {
+            message.success("登录成功！");
+            console.log("获取主机名称：" + data.data);
+            _this.setState({
+              isLogin: !_this.state.isLogin,
+              IPaddress: data.data
+            });
+          } else {
+            message.error("登录失败，请重试！");
+          }
         });
     }
     function getTaskList(userId) {
@@ -151,7 +156,7 @@ class App extends React.Component {
         <div className="navInput">
           <Input size="large" placeholder="Job Name" />
           <Select
-            defaultValue="GITBLIT_JENKINSFILE"
+            defaultValue="选择类型"
             style={{ width: 120 }}
             onChange={handleChange}
             size="large"
@@ -160,7 +165,9 @@ class App extends React.Component {
           </Select>
           <Input size="large" placeholder="接受触发工程URL" />
           <Input size="large" placeholder="项目描述" id="todoCheck" />
-          <Checkbox onChange={onChange}>保存自动运行</Checkbox>
+          <Checkbox onChange={onChange} checked>
+            保存自动运行
+          </Checkbox>
         </div>
         <GGEditor className="GGEditor">
           <Toolbar className="Toolbar">
@@ -287,6 +294,7 @@ class App extends React.Component {
                     JSON.stringify(
                       convertInternalModelToJson(pipelineStore.pipeline)
                     )
+                  //json文件发送
                 );
                 console.log(
                   "contextStage last:" + JSON.stringify(contextStage)
