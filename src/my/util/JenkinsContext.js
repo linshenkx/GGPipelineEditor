@@ -6,6 +6,10 @@ import pipelineStore from "../service/PipelineStore";
 class JenkinsContext {
     stageMap={};
     currentStageId;
+    userId="";
+    dataList=[];
+    isLogin=false;
+    IPaddress="";
 }
 
 

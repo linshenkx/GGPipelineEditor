@@ -23,12 +23,7 @@ import StepEditor from "./my/editor/steps/StepEditor";
 const Option = Select.Option;
 
 class App extends React.Component {
-  state = {
-    dataList: [],
-    userId: "",
-    IPaddress: "",
-    isLogin: false
-  };
+
   render() {
     const data = {
       nodes: [
@@ -75,10 +70,8 @@ class App extends React.Component {
           if (data.code === 200) {
             message.success("登录成功！");
             console.log("获取主机名称：" + data.data);
-            _this.setState({
-              isLogin: !_this.state.isLogin,
-              IPaddress: data.data
-            });
+            jenkinsContext.isLogin=!jenkinsContext.isLogin;
+            jenkinsContext.IPaddress=data.data;
           } else {
             message.error("登录失败，请重试！");
           }
@@ -90,10 +83,8 @@ class App extends React.Component {
         .then(data => {
           console.log(data.data);
           console.log(userId);
-          _this.setState({
-            dataList: data.data
-          });
-          console.log(_this.state.dataList);
+          jenkinsContext.dataList=data.data;
+          console.log(jenkinsContext.dataList);
         });
     }
     return (
@@ -102,7 +93,7 @@ class App extends React.Component {
         <div
           className={[
             "Homeuser",
-            false === this.state.isLogin ? null : "noDisplay"
+            false === jenkinsContext.isLogin ? null : "noDisplay"
           ].join(" ")}
         >
           <div className="name">
@@ -112,9 +103,7 @@ class App extends React.Component {
               placeholder="id"
               onChange={e => {
                 console.log(e.target.value);
-                this.setState({
-                  userId: e.target.value
-                });
+                jenkinsContext.userId=e.target.value;
               }}
             />
           </div>
@@ -123,8 +112,9 @@ class App extends React.Component {
               type="primary"
               size="large"
               onClick={() => {
-                getUser(this.state.userId);
-                getTaskList(this.state.userId);
+                getUser(jenkinsContext.userId);
+                getTaskList(jenkinsContext.userId);
+                this.setState({});
               }}
             >
               登录
@@ -135,13 +125,13 @@ class App extends React.Component {
         <div
           className={[
             "Homeuser",
-            true === this.state.isLogin ? null : "noDisplay"
+            true === jenkinsContext.isLogin ? null : "noDisplay"
           ].join(" ")}
         >
           <div id="loginState">
             <Alert
-              message={this.state.userId}
-              description={this.state.IPaddress}
+              message={jenkinsContext.userId}
+              description={jenkinsContext.IPaddress}
               type="success"
               className="Alert"
             />
@@ -155,7 +145,7 @@ class App extends React.Component {
             onChange={handleChange}
             size="large"
           >
-            <Option value="caseO">{this.state.dataList[0]}</Option>
+            <Option value="caseO">{jenkinsContext.dataList[0]}</Option>
           </Select>
           <Input size="large" placeholder="接受触发工程URL" />
           <Input size="large" placeholder="项目描述" id="todoCheck" />
@@ -199,7 +189,7 @@ class App extends React.Component {
             </Command>
             <SaveButton
               text="保存"
-              enable={this.state.isLogin===true?true:false}
+              enable={jenkinsContext.isLogin===true}
               resolveData={data => {
                 console.log("保存:" + JSON.stringify(data));
 
