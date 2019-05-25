@@ -15,7 +15,7 @@ import GGEditor, {
   CanvasPanel
 } from "gg-editor";
 import "antd/dist/antd.css";
-import { Input, Button, Select, Checkbox } from "antd";
+import { Input, Button, Select, Checkbox, Alert } from "antd";
 import SavesButten from "./my/component/PropsButten";
 import pipelineStore from "./my/service/PipelineStore";
 import { convertInternalModelToJson } from "./my/service/PipelineSyntaxConverter";
@@ -24,6 +24,17 @@ import StepEditor from "./my/editor/steps/StepEditor";
 const Option = Select.Option;
 
 class App extends React.Component {
+  // constructor(props) {
+  //   super(props);
+
+  // }
+  state = {
+    dataList: [],
+    userId: "",
+    IPaddress: "",
+    isLogin: false
+  };
+
   render() {
     const data = {
       nodes: [
@@ -44,15 +55,6 @@ class App extends React.Component {
           }
         }
       ]
-      // edges: [{
-      //   source: 'ea1184e8',
-      //   sourceAnchor: 2,
-      //   target: '481fbb1a',
-      //   targetAnchor: 0,
-      //   id: '7989ac70',
-      //   index: 1,
-      //   myProp: {}
-      // }],
     };
     let graph = {
       container: "mountNode",
@@ -68,32 +70,96 @@ class App extends React.Component {
     function onChange(e) {
       console.log(`checked = ${e.target.checked}`);
     }
+    // 这里踩坑，this的指向有问题，必须全局的this
+    var _this = this;
+    function getUser(userId) {
+      console.log("你点击了登录按钮");
+      fetch("http://149.129.127.108:9090/user?userId=" + userId)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data);
+          console.log("获取主机名称：" + data.data);
+          _this.setState({
+            isLogin: !_this.state.isLogin,
+            IPaddress: data.data
+          });
+        });
+    }
+    function getTaskList(userId) {
+      fetch("http://149.129.127.108:9090/job/types?userId=" + userId)
+        .then(res => res.json())
+        .then(data => {
+          console.log(data.data);
+          console.log(userId);
+          _this.setState({
+            dataList: data.data
+          });
+          console.log(_this.state.dataList);
+        });
+    }
     return (
-      <div className="App">
-        <div className="Homeuser">
+      <div className="App ">
+        {/* 登录模块（未登录状态） */}
+        <div
+          className={[
+            "Homeuser",
+            false === this.state.isLogin ? null : "noDisplay"
+          ].join(" ")}
+        >
           <div className="name">
-            <Input type="text" size="large" placeholder="id" />
+            <Input
+              type="text"
+              size="large"
+              placeholder="id"
+              onChange={e => {
+                console.log(e.target.value);
+                this.setState({
+                  userId: e.target.value
+                });
+              }}
+            />
           </div>
           <div className="homeId">
-            <Button type="primary" size="large">
+            <Button
+              type="primary"
+              size="large"
+              onClick={() => {
+                getUser(this.state.userId);
+                getTaskList(this.state.userId);
+              }}
+            >
               登录
             </Button>
+          </div>
+        </div>
+        {/* 已登录状态 */}
+        <div
+          className={[
+            "Homeuser",
+            true === this.state.isLogin ? null : "noDisplay"
+          ].join(" ")}
+        >
+          <div id="loginState">
+            <Alert
+              message={this.state.userId}
+              description={this.state.IPaddress}
+              type="success"
+              className="Alert"
+            />
           </div>
         </div>
         <div className="navInput">
           <Input size="large" placeholder="Job Name" />
           <Select
-            defaultValue="类型1"
+            defaultValue="GITBLIT_JENKINSFILE"
             style={{ width: 120 }}
             onChange={handleChange}
             size="large"
           >
-            <Option value="caseO">类型1</Option>
-            <Option value="caseT">类型2</Option>
-            <Option value="caseH">类型3</Option>
+            <Option value="caseO">{this.state.dataList[0]}</Option>
           </Select>
-          <Input size="large" placeholder="URL" />
-          <Input size="large" placeholder="URL" id="todoCheck" />
+          <Input size="large" placeholder="接受触发工程URL" />
+          <Input size="large" placeholder="项目描述" id="todoCheck" />
           <Checkbox onChange={onChange}>保存自动运行</Checkbox>
         </div>
         <GGEditor className="GGEditor">
@@ -284,7 +350,7 @@ class App extends React.Component {
               console.log("放置节点");
               // console.log(e.item.model);
             }}
-            onAfterItemSelected={e=>{
+            onAfterItemSelected={e => {
               console.log("选中后");
               console.log(e.item.model);
               if (e.item.model.myProps.stageType === "leader") {
@@ -297,7 +363,6 @@ class App extends React.Component {
             onNodeClick={e => {
               console.log("点击节点");
               console.log(e.item.model);
-              
             }}
             onEdgeClick={e => {
               console.log("点击边线");
