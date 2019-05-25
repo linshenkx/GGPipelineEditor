@@ -220,7 +220,10 @@ class App extends React.Component {
                   "pipelineStore.pipeline:" +
                     JSON.stringify(pipelineStore.pipeline)
                 );
-
+                if(!edgeList){
+                  console.log("起始节点未连接！");
+                  return;
+                }
                 let currentEdges = edgeList.filter(currentValue => {
                   return currentValue.source === "00000";
                 });
@@ -288,19 +291,24 @@ class App extends React.Component {
                     JSON.stringify(
                       convertInternalModelToJson(pipelineStore.pipeline)
                     )
-                    
+
                   //json文件发送
                 );
                 console.log(encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline)))
                 fetch(
                   "http://149.129.127.108:9090/job/convert/jsonToJenkinsfile?jenkinsJson=" +
-                    encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline)),
-                    {headers:{'Access-Control-Allow-Origin': '*'}}
+                    (encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline))),
+                    {
+                      method : 'POST',
+                    }
+
                 )
                   .then(res => res.json())
                   .then(data => {
-                    console.log(data.data);
-                  });
+                    console.log("data json:"+JSON.stringify(data));
+                  }).catch(err => {
+                  console.log("error json:"+JSON.stringify(err));
+                });
                 console.log(
                   "contextStage last:" + JSON.stringify(contextStage)
                 );
