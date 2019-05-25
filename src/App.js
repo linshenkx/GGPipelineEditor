@@ -199,7 +199,7 @@ class App extends React.Component {
             </Command>
             <SaveButton
               text="保存"
-              enable={false}
+              enable={this.state.isLogin===true?true:false}
               resolveData={data => {
                 console.log("保存:" + JSON.stringify(data));
 
