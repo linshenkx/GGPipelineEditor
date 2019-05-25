@@ -14,16 +14,16 @@ import GGEditor, {
   CanvasPanel
 } from "gg-editor";
 import "antd/dist/antd.css";
-import { Input, Button, Select, Checkbox, Alert, message } from "antd";
+import { Input, Select, Checkbox } from "antd";
 import SaveButton from "./my/component/SaveButton";
 import pipelineStore from "./my/service/PipelineStore";
 import { convertInternalModelToJson } from "./my/service/PipelineSyntaxConverter";
 import jenkinsContext from "./my/util/JenkinsContext";
 import StepEditor from "./my/editor/steps/StepEditor";
+import UserState from './my/component/userState';
 const Option = Select.Option;
 
 class App extends React.Component {
-
   render() {
     const data = {
       nodes: [
@@ -59,84 +59,11 @@ class App extends React.Component {
     function onChange(e) {
       console.log(`checked = ${e.target.checked}`);
     }
-    // 这里踩坑，this的指向有问题，必须全局的this
-    var _this = this;
-    function getUser(userId) {
-      console.log("你点击了登录按钮");
-      fetch("http://149.129.127.108:9090/user?userId=" + userId)
-        .then(res => res.json())
-        .then(data => {
-          console.log(data);
-          if (data.code === 200) {
-            message.success("登录成功！");
-            console.log("获取主机名称：" + data.data);
-            jenkinsContext.isLogin=!jenkinsContext.isLogin;
-            jenkinsContext.IPaddress=data.data;
-          } else {
-            message.error("登录失败，请重试！");
-          }
-        });
-    }
-    function getTaskList(userId) {
-      fetch("http://149.129.127.108:9090/job/types?userId=" + userId)
-        .then(res => res.json())
-        .then(data => {
-          console.log(data.data);
-          console.log(userId);
-          jenkinsContext.dataList=data.data;
-          console.log(jenkinsContext.dataList);
-        });
-    }
+    
     return (
       <div className="App ">
-        {/* 登录模块（未登录状态） */}
-        <div
-          className={[
-            "Homeuser",
-            false === jenkinsContext.isLogin ? null : "noDisplay"
-          ].join(" ")}
-        >
-          <div className="name">
-            <Input
-              type="text"
-              size="large"
-              placeholder="id"
-              onChange={e => {
-                console.log(e.target.value);
-                jenkinsContext.userId=e.target.value;
-              }}
-            />
-          </div>
-          <div className="homeId">
-            <Button
-              type="primary"
-              size="large"
-              onClick={() => {
-                getUser(jenkinsContext.userId);
-                getTaskList(jenkinsContext.userId);
-                this.setState({});
-              }}
-            >
-              登录
-            </Button>
-          </div>
-        </div>
-        {/* 已登录状态 */}
-        <div
-          className={[
-            "Homeuser",
-            true === jenkinsContext.isLogin ? null : "noDisplay"
-          ].join(" ")}
-        >
-          <div id="loginState">
-            <Alert
-              message={jenkinsContext.userId}
-              description={jenkinsContext.IPaddress}
-              type="success"
-              className="Alert"
-            />
-          </div>
-        </div>
+        {/* 登录模块 */}
+        <UserState />
         <div className="navInput">
           <Input size="large" placeholder="Job Name" />
           <Select
@@ -189,7 +116,7 @@ class App extends React.Component {
             </Command>
             <SaveButton
               text="保存"
-              enable={jenkinsContext.isLogin===true}
+              enable={jenkinsContext.isLogin === true}
               resolveData={data => {
                 console.log("保存:" + JSON.stringify(data));
 
@@ -211,7 +138,7 @@ class App extends React.Component {
                   "pipelineStore.pipeline:" +
                     JSON.stringify(pipelineStore.pipeline)
                 );
-                if(!edgeList){
+                if (!edgeList) {
                   console.log("起始节点未连接！");
                   return;
                 }
@@ -285,21 +212,27 @@ class App extends React.Component {
 
                   //json文件发送
                 );
-                console.log(encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline)))
+                console.log(
+                  encodeURIComponent(
+                    convertInternalModelToJson(pipelineStore.pipeline)
+                  )
+                );
                 fetch(
                   "http://149.129.127.108:9090/job/convert/jsonToJenkinsfile?jenkinsJson=" +
-                    (encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline))),
-                    {
-                      method : 'POST',
-                    }
-
+                    encodeURIComponent(
+                      convertInternalModelToJson(pipelineStore.pipeline)
+                    ),
+                  {
+                    method: "POST"
+                  }
                 )
                   .then(res => res.json())
                   .then(data => {
-                    console.log("data json:"+JSON.stringify(data));
-                  }).catch(err => {
-                  console.log("error json:"+JSON.stringify(err));
-                });
+                    console.log("data json:" + JSON.stringify(data));
+                  })
+                  .catch(err => {
+                    console.log("error json:" + JSON.stringify(err));
+                  });
                 console.log(
                   "contextStage last:" + JSON.stringify(contextStage)
                 );
