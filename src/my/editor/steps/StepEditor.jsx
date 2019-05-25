@@ -14,7 +14,6 @@ import { stageUtil } from "../../util/StageUtil";
 import jenkinsContext from "../../util/JenkinsContext";
 import pipelineStore from "../../service/PipelineStore";
 const Option = Select.Option;
-const Search = Input.Search;
 class StepEditor extends React.Component {
   newStage = () => {
     console.log("新建Stage");

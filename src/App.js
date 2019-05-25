@@ -1,6 +1,5 @@
 import React from "react";
 import "./App.css";
-
 import GGEditor, {
   Flow,
   Item,
@@ -24,17 +23,12 @@ import StepEditor from "./my/editor/steps/StepEditor";
 const Option = Select.Option;
 
 class App extends React.Component {
-  // constructor(props) {
-  //   super(props);
-
-  // }
   state = {
     dataList: [],
     userId: "",
     IPaddress: "",
     isLogin: false
   };
-
   render() {
     const data = {
       nodes: [
@@ -294,8 +288,19 @@ class App extends React.Component {
                     JSON.stringify(
                       convertInternalModelToJson(pipelineStore.pipeline)
                     )
+                    
                   //json文件发送
                 );
+                console.log(encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline)))
+                fetch(
+                  "http://149.129.127.108:9090/job/convert/jsonToJenkinsfile?jenkinsJson=" +
+                    encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline)),
+                    {headers:{'Access-Control-Allow-Origin': '*'}}
+                )
+                  .then(res => res.json())
+                  .then(data => {
+                    console.log(data.data);
+                  });
                 console.log(
                   "contextStage last:" + JSON.stringify(contextStage)
                 );
