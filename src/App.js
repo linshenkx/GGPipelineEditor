@@ -15,7 +15,7 @@ import GGEditor, {
 } from "gg-editor";
 import "antd/dist/antd.css";
 import { Input, Button, Select, Checkbox, Alert, message } from "antd";
-import SavesButten from "./my/component/PropsButten";
+import SaveButton from "./my/component/SaveButton";
 import pipelineStore from "./my/service/PipelineStore";
 import { convertInternalModelToJson } from "./my/service/PipelineSyntaxConverter";
 import jenkinsContext from "./my/util/JenkinsContext";
@@ -197,8 +197,9 @@ class App extends React.Component {
             <Command name="paste" className="item">
               粘贴
             </Command>
-            <SavesButten
+            <SaveButton
               text="保存"
+              enable={false}
               resolveData={data => {
                 console.log("保存:" + JSON.stringify(data));
 
