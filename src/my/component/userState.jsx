@@ -1,9 +1,10 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component, PropTypes } from "react";
 import jenkinsContext from "../util/JenkinsContext";
 import { Input, Button, Alert, message } from "antd";
 
 class userState extends React.Component {
   render() {
+    var that = this;
     function getUser(userId) {
       console.log("你点击了登录按钮");
       fetch("http://149.129.127.108:9090/user?userId=" + userId)
