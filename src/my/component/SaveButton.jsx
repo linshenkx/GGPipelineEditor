@@ -124,7 +124,6 @@ class SaveButton extends React.Component {
   render() {
     return (
       <Button
-      // disabled={this.store.sku = sku}
         id="saveBtn"
         type="primary"
         onClick={this.handleSaveClick}

@@ -16,7 +16,7 @@ class topBar extends React.Component {
       enable: false,
       userId: "",
       IPaddress: "",
-      dataList: ""
+      dataList: []
     };
   }
      resolveData=(data)=> {
@@ -158,9 +158,9 @@ class topBar extends React.Component {
         .then(res => res.json())
         .then(data => {
           console.log(data.data);
-          jenkinsContext.dataList = data.data;
-          console.log("jenkinsContext:" + jenkinsContext.dataList[0]);
-          // _this.setState({dataList: data.data})
+          // jenkinsContext.dataList = data.data;
+          // console.log("jenkinsContext:" + jenkinsContext.dataList[0]);
+          _this.setState({dataList: data.data})
         });
     }
     function handleChange(value) {
@@ -168,12 +168,11 @@ class topBar extends React.Component {
     }
     function onChange(e) {
       console.log(`checked = ${e.target.checked}`);
-      console.log(this.state.dataList);
     }
 
 
     return (
-      <div>
+      <div className="TopBar">
         <div>
           <div
             className={[
@@ -245,11 +244,11 @@ class topBar extends React.Component {
               onChange={handleChange}
               size="large"
             >
-              <Option value="caseO">{jenkinsContext.dataList[0]}</Option>
+              <Option value="caseO">{this.state.dataList[0]}</Option>
             </Select>
             <Input size="large" placeholder="接受触发工程URL" />
             <Input size="large" placeholder="项目描述" id="todoCheck" />
-            <Checkbox onChange={onChange} checked>
+            <Checkbox onChange={onChange} defaultChecked={true}>
               保存自动运行
             </Checkbox>
           </div>

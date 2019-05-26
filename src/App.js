@@ -48,8 +48,7 @@ class App extends React.Component {
       <div className="App ">
 
         <GGEditor className="GGEditor">
-          <TopBar />
-
+          <TopBar id="TopBar"/>
           <Toolbar className="Toolbar">
             <Command name="clear" className="item">
               清空
