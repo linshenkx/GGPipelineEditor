@@ -136,8 +136,8 @@ class topBar extends React.Component {
           if (data.code === 200) {
             message.success("登录成功！");
             console.log("获取主机名称：" + data.data);
-            // jenkinsContext.isLogin = !jenkinsContext.isLogin;
-            // jenkinsContext.IPaddress = data.data;
+            jenkinsContext.isLogin = !jenkinsContext.isLogin;
+            jenkinsContext.IPaddress = data.data;
             _this.setState({
               isLogin: true,
               enable: true,
@@ -168,20 +168,13 @@ class topBar extends React.Component {
     function onChange(e) {
       console.log(`checked = ${e.target.checked}`);
     }
-    // function goTo() {
-    //   console.log("跳转");
-    //   this.props.router.push({
-    //     pathname: "taskDetails",
-    //     // state: mystate
-    //   });
-    // }
     return (
       <div className="TopBar">
         <div>
           <div
             className={[
               "Homeuser",
-              false === this.state.isLogin ? null : "noDisplay"
+              false === jenkinsContext.isLogin ? null : "noDisplay"
             ].join(" ")}
           >
             <div className="name">
@@ -215,13 +208,13 @@ class topBar extends React.Component {
           <div
             className={[
               "Homeuser",
-              true === this.state.isLogin ? null : "noDisplay"
+              true ===jenkinsContext.isLogin ? null : "noDisplay"
             ].join(" ")}
           >
             <div id="loginState">
               <Alert
                 message={jenkinsContext.userId}
-                description={this.state.IPaddress}
+                description={jenkinsContext.IPaddress}
                 type="success"
                 className="Alert"
               />
@@ -231,7 +224,7 @@ class topBar extends React.Component {
         {/* http://localhost:3000/#/taskDetails */}
          <Button type="primary" size="large" className="taskDetails"><a href="#/taskDetails">查看任务详情</a></Button>
         <Button
-          disabled={!this.state.isLogin}
+          disabled={!jenkinsContext.isLogin}
           id="saveBtn"
           type="primary"
           onClick={() => {
