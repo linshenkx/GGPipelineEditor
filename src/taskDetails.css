@@ -1,0 +1,45 @@
+.wrapper {
+  width: 100%;
+  border: 1px solid red;
+  height: 80px;
+  display: flex;
+  justify-content: normal;
+}
+.header{
+  width: 100%;
+  display: flex;
+  justify-content: normal;
+}
+.userLogin {
+  width: 20%;
+  border: 1px solid red;
+}
+.middle {
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  border: 1px solid red;
+}
+.middle div {
+  display: flex;
+  width: 100%;
+  justify-content: baseline;
+}
+.right {
+  width: 30%;
+  display: flex;
+}
+.right div {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.body{
+    position: absolute;
+    left: 20vw;
+    top: 20vh;;
+}
+.gridStyle{
+    
+}
