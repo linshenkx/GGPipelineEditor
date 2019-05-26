@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent } from "react";
 import "./App.css";
 import GGEditor, {
   Flow,
@@ -14,6 +14,7 @@ import SaveButton from "./my/component/SaveButton";
 import jenkinsContext from "./my/util/JenkinsContext";
 import StepEditor from "./my/editor/steps/StepEditor";
 import TopBar from "./my/component/topBar";
+
 class App extends React.Component {
   render() {
     const data = {
@@ -46,9 +47,8 @@ class App extends React.Component {
     };
     return (
       <div className="App ">
-
         <GGEditor className="GGEditor">
-          <TopBar id="TopBar"/>
+          <TopBar id="TopBar" />
           <Toolbar className="Toolbar">
             <Command name="clear" className="item">
               清空
@@ -160,5 +160,4 @@ class App extends React.Component {
     );
   }
 }
-
 export default App;
