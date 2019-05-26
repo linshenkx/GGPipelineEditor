@@ -46,8 +46,9 @@ class App extends React.Component {
     };
     return (
       <div className="App ">
-        <TopBar />
+
         <GGEditor className="GGEditor">
+          <TopBar />
 
           <Toolbar className="Toolbar">
             <Command name="clear" className="item">
