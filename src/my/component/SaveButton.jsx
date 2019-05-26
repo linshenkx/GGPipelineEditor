@@ -1,6 +1,6 @@
 import React from "react";
 import { withPropsAPI } from "gg-editor";
-import { Button } from "antd";
+import { Button ,message} from "antd";
 import PropTypes from "prop-types";
 import "../editor/steps/StepEditor.css";
 import jenkinsContext from "../util/JenkinsContext";

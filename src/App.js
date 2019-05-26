@@ -13,8 +13,6 @@ import "antd/dist/antd.css";
 import SaveButton from "./my/component/SaveButton";
 import jenkinsContext from "./my/util/JenkinsContext";
 import StepEditor from "./my/editor/steps/StepEditor";
-import store from './my/store';
-
 import TopBar from "./my/component/topBar";
 class App extends React.Component {
   render() {
@@ -50,9 +48,7 @@ class App extends React.Component {
       <div className="App ">
         <TopBar />
         <GGEditor className="GGEditor">
-          <SaveButton
-            enable={jenkinsContext.isLogin === true}
-          />
+
           <Toolbar className="Toolbar">
             <Command name="clear" className="item">
               清空
