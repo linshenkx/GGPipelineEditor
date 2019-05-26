@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import jenkinsContext from "../util/JenkinsContext";
 import { Input, Button, Alert, message } from "antd";
+import store from '../store.js';
 class userState extends React.Component {
   state = {
     isLogin: false,
@@ -29,6 +30,8 @@ class userState extends React.Component {
           } else {
             message.error("登录失败，请重试！");
           }
+        }).then(()=>{
+          Object.assign(store, this.state.isLogin)
         });
     }
     function getTaskList(userId) {

@@ -6,9 +6,8 @@ import "../editor/steps/StepEditor.css";
 import jenkinsContext from "../util/JenkinsContext";
 import pipelineStore from "../service/PipelineStore";
 import { convertInternalModelToJson } from "../service/PipelineSyntaxConverter";
-import store from "../store.js";
-import { action } from "mobx";
-import { observer } from "mobx-react";
+import store from '../store.js';
+
 
 class SaveButton extends React.Component {
   constructor(props) {
@@ -125,7 +124,7 @@ class SaveButton extends React.Component {
   render() {
     return (
       <Button
-        // disabled={!this.store.isLogin}
+      // disabled={this.store.sku = sku}
         id="saveBtn"
         type="primary"
         onClick={this.handleSaveClick}
