@@ -3,7 +3,11 @@ import { Input, Button, Alert, message, Card, Col, Row } from "antd";
 import jenkinsContext from "./my/util/JenkinsContext";
 import "./taskDetails.css";
 const gridStyle = {
-  width: "25%",
+  width: "50%",
+  textAlign: "center"
+};
+const gridStyle2 = {
+  width: "50%",
   textAlign: "center"
 };
 export default class TaskDetails extends React.Component {
@@ -92,8 +96,11 @@ export default class TaskDetails extends React.Component {
           </div>
         </div>
         <div className="body">
-          <div className="left">
-            <Card title="Card Title" noHovering>
+          <div className="body_left">
+            <Card title="Card Title">
+              <Card.Grid style={gridStyle}>Content</Card.Grid>
+              <Card.Grid style={gridStyle}>Content</Card.Grid>
+              <Card.Grid style={gridStyle}>Content</Card.Grid>
               <Card.Grid style={gridStyle}>Content</Card.Grid>
               <Card.Grid style={gridStyle}>Content</Card.Grid>
               <Card.Grid style={gridStyle}>Content</Card.Grid>
@@ -103,7 +110,20 @@ export default class TaskDetails extends React.Component {
               <Card.Grid style={gridStyle}>Content</Card.Grid>
             </Card>
           </div>
-          <div className="right" />
+          <div className="body_right ">
+            <Card title="Card Title">
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+              <Card.Grid style={gridStyle2}>Content</Card.Grid>
+            </Card>
+          </div>
         </div>
       </div>
     );

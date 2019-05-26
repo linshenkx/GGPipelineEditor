@@ -38,8 +38,15 @@
 .body{
     position: absolute;
     left: 20vw;
-    top: 20vh;;
+    top: 20vh;
+    display: flex;
+    justify-content: space-between;
 }
-.gridStyle{
-    
+
+.left,.right{
+    width: 50%;
+}
+.body_right{
+    padding-right: 20vw;
+    padding-left: 50px;
 }
