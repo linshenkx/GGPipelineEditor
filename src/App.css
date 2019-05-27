@@ -128,3 +128,9 @@
   right: 0;
   z-index: 1;
 }
+#saveData{
+  position: absolute;
+  left: 88vw;
+  top: 0;
+  z-index: 1;
+}

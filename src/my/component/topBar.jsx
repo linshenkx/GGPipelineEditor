@@ -8,6 +8,7 @@ import pipelineStore from "../service/PipelineStore";
 import { convertInternalModelToJson } from "../service/PipelineSyntaxConverter";
 import { withPropsAPI } from "gg-editor";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Base64 } from "js-base64";
 const Option = Select.Option;
 class topBar extends React.Component {
   constructor(props) {
@@ -21,6 +22,9 @@ class topBar extends React.Component {
     };
   }
   resolveData = data => {
+    if (jenkinsContext.jobName === "") {
+      message.error("请输入任务名！");
+    }
     console.log("保存:" + JSON.stringify(data));
 
     //获取起始节点的stage,完成全局初始化
@@ -101,22 +105,57 @@ class topBar extends React.Component {
       "convertInternalModelToJson:" +
         JSON.stringify(convertInternalModelToJson(pipelineStore.pipeline))
     );
-    console.log(
-      encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline))
-    );
+
+    //第一个请求，获取jenkinsfile
     fetch(
       "http://149.129.127.108:9090/job/convert/jsonToJenkinsfile?jenkinsJson=" +
-        encodeURIComponent(convertInternalModelToJson(pipelineStore.pipeline)),
+        encodeURIComponent(
+          JSON.stringify(convertInternalModelToJson(pipelineStore.pipeline))
+        ) +
+        "&userId=" +
+        jenkinsContext.userId,
       {
         method: "POST"
       }
     )
       .then(res => res.json())
       .then(data => {
-        console.log("data json:" + JSON.stringify(data));
+        console.log("获取到jenkinsFile:" + data.data.jenkinsfile);
+        jenkinsContext.jenkinsfile = data.data.jenkinsfile;
+        console.log(encodeURIComponent(jenkinsContext.jenkinsfile));
+        
+        if (data.data.result === "failure") {
+          message.error("缺少请求参数！");
+        }
       })
       .catch(err => {
         console.log("error json:" + JSON.stringify(err));
+      });
+    console.log(jenkinsContext.isAutoRun);
+    console.log(jenkinsContext.jenkinsfile);
+    //第二个请求，运行
+    fetch(
+      "http://149.129.127.108:9090/job/create?description=" +
+        jenkinsContext.description +
+        "&init=" +
+        jenkinsContext.isAutoRun +
+        "&jenkinsfile=" +
+        encodeURIComponent(jenkinsContext.jenkinsfile) +
+        "&jobName=" +
+        jenkinsContext.jobName +
+        "&jobType=" +
+        jenkinsContext.dataList[0] +
+        "&projectUrl=" +
+        jenkinsContext.handleURL +
+        "&userId=" +
+        jenkinsContext.userId,
+      {
+        method: "POST"
+      }
+    )
+      .then(res => res.json())
+      .then(data => {
+        console.log("任务资料" + JSON.stringify(data));
       });
     console.log("contextStage last:" + JSON.stringify(contextStage));
   };
@@ -124,6 +163,23 @@ class topBar extends React.Component {
     const { propsAPI } = this.props;
     let data = propsAPI.save();
     this.resolveData(data);
+  };
+  saveData = () => {
+    fetch(
+      "http://149.129.127.108:9090/job/jobData?jobData=" +
+        jenkinsContext.jobData +
+        "&jobName=" +
+        jenkinsContext.jobName +
+        "&userId=" +
+        jenkinsContext.userId,
+      {
+        method: "POST"
+      }
+    )
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+      });
   };
   render() {
     var _this = this;
@@ -157,16 +213,13 @@ class topBar extends React.Component {
         .then(res => res.json())
         .then(data => {
           console.log(data.data);
-          // jenkinsContext.dataList = data.data;
+          jenkinsContext.dataList = data.data;
           // console.log("jenkinsContext:" + jenkinsContext.dataList[0]);
           _this.setState({ dataList: data.data });
         });
     }
     function handleChange(value) {
       console.log(`selected ${value}`);
-    }
-    function onChange(e) {
-      console.log(`checked = ${e.target.checked}`);
     }
     return (
       <div className="TopBar">
@@ -208,7 +261,7 @@ class topBar extends React.Component {
           <div
             className={[
               "Homeuser",
-              true ===jenkinsContext.isLogin ? null : "noDisplay"
+              true === jenkinsContext.isLogin ? null : "noDisplay"
             ].join(" ")}
           >
             <div id="loginState">
@@ -222,21 +275,45 @@ class topBar extends React.Component {
           </div>
         </div>
         {/* http://localhost:3000/#/taskDetails */}
-         <Button type="primary" size="large" className="taskDetails"><a href="#/taskDetails">查看任务详情</a></Button>
+        <Button type="primary" size="large" className="taskDetails">
+          <a href="#/taskDetails">查看任务详情</a>
+        </Button>
+        <Button
+          id="saveData"
+          type="primary"
+          onClick={() => {
+            const { propsAPI } = this.props;
+            let data = propsAPI.save();
+            jenkinsContext.jobData = encodeURIComponent(JSON.stringify(data));
+            this.saveData();
+          }}
+          size="large"
+        >
+          保存编辑数据
+        </Button>
         <Button
           disabled={!jenkinsContext.isLogin}
           id="saveBtn"
           type="primary"
           onClick={() => {
+            this.saveData();
             this.handleSaveClick();
           }}
           size="large"
         >
-          保存
+          保存并运行
         </Button>
+
         <div>
           <div className="navInput">
-            <Input size="large" placeholder="Job Name" />
+            <Input
+              size="large"
+              placeholder="Job Name"
+              onChange={e => {
+                jenkinsContext.jobName = e.target.value;
+                console.log(jenkinsContext.jobName);
+              }}
+            />
             <Select
               defaultValue="选择类型"
               style={{ width: 120 }}
@@ -245,9 +322,31 @@ class topBar extends React.Component {
             >
               <Option value="caseO">{this.state.dataList[0]}</Option>
             </Select>
-            <Input size="large" placeholder="接受触发工程URL" />
-            <Input size="large" placeholder="项目描述" id="todoCheck" />
-            <Checkbox onChange={onChange} defaultChecked={true}>
+            <Input
+              size="large"
+              placeholder="接受触发工程URL"
+              onChange={e => {
+                jenkinsContext.handleURL = e.target.value;
+                console.log(jenkinsContext.handleURL);
+              }}
+            />
+            <Input
+              size="large"
+              placeholder="项目描述"
+              id="todoCheck"
+              onChange={e => {
+                jenkinsContext.description = e.target.value;
+                console.log(jenkinsContext.description);
+              }}
+            />
+            <Checkbox
+              onChange={e => {
+                console.log(`checked = ${e.target.checked}`);
+                jenkinsContext.isAutoRun = e.target.checked&&true;
+                console.log(jenkinsContext.isAutoRun);
+              }}
+              defaultChecked={true}
+            >
               保存自动运行
             </Checkbox>
           </div>

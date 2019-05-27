@@ -10,6 +10,12 @@ class JenkinsContext {
     dataList=[];
     isLogin=false;
     IPaddress="";
+    jobName:"";
+    jobData:"";
+    isAutoRun=true;
+    handleURL:"";
+    description:"";
+    jenkinsfile
 }
 
 
