@@ -82,7 +82,7 @@ class StepEditor extends React.Component {
     let stepType = stepUtil.getStepTypeFromModel(model);
 
     if (jenkinsContext.currentStageId === 9999 && stepType !== "first") {
-      let newStage = pipelineStore.createNoneStage("newStage");
+      let newStage = pipelineStore.createAnyStage("newStage");
       jenkinsContext.stageMap[newStage.id] = newStage;
       jenkinsContext.currentStageId = newStage.id;
 

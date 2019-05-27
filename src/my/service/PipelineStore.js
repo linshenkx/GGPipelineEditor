@@ -183,11 +183,11 @@ class PipelineStore {
     pipeline: StageInfo;
     listeners: Function[] = [];
 
-    createNoneStage(name: string): StageInfo {
+    createAnyStage(name: string): StageInfo {
         return {
             name,
             agent: {
-                type: 'none', // default to no agent
+                type: 'any', // default to no agent
                 arguments: [],
             },
             id: idgen.next(),

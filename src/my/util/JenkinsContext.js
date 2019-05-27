@@ -21,7 +21,7 @@ class JenkinsContext {
 
 const jenkinsContext = new JenkinsContext();
 
-let contextStage= pipelineStore.createNoneStage("contextStage");
+let contextStage= pipelineStore.createAnyStage("contextStage");
 contextStage.id=9999;
 // jenkinsContext.stageMap.set(contextStage.id,contextStage);
 jenkinsContext.currentStageId=contextStage.id;
