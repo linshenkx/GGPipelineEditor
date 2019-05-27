@@ -17,7 +17,7 @@ export default class TaskDetails extends React.Component {
 
   render() {
     return (
-      <div className="wrapper">
+      <div className="wrap">
         <div className="header">
           {/* 顶部登录模块 */}
           <div className="userLogin">
