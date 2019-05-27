@@ -98,81 +98,65 @@ class EditableCell extends React.Component {
 }
 
 class EnvironmentEditor extends React.Component {
-    columns = [
-        {
-            title: "变量名",
-            dataIndex: "key",
-            width: "30%",
-            editable: !this.props.disabled
-        },
-        {
-            title: "变量值",
-            dataIndex: "value.value",
-            editable: !this.props.disabled
-        },
-        {
-            title: (<Button
-            disabled={this.props.disabled}
-                onClick={()=>this.handleAdd()}
-                type="primary"
-                style={{ marginBottom: 10 }}
-            >
-                添加
-            </Button>),
-            dataIndex: "operation",
-            render: (text, record) =>
-                stageUtil.getEnvironment(this.props.stageId).length >= 1 ? (
-                    <Popconfirm
-                        
-                        title="Sure to delete?"
-                        onConfirm={() =>{ this.handleDelete(record.key);
-                            console.log("text :"+text);
-                            console.log("record json:"+JSON.stringify(record));
-                        }}
-                    >
-                        <Button type='primary' disabled={this.props.disabled} >Delete</Button>
-                    </Popconfirm>
-                ) : null
-        }
-    ];
+  columns = [
+    {
+      title: "变量名",
+      dataIndex: "key",
+      width: "30%",
+      editable: !this.props.disabled
+    },
+    {
+      title: "变量值",
+      dataIndex: "value.value",
+      editable: !this.props.disabled
+    },
+    {
+      title: (
+        <Button
+          disabled={this.props.disabled}
+          onClick={() => this.handleAdd()}
+          type="primary"
+          style={{ marginBottom: 10 }}
+        >
+          添加
+        </Button>
+      ),
+      dataIndex: "operation",
+      render: (text, record) =>
+        stageUtil.getEnvironment(this.props.stageId).length >= 1 ? (
+          <Popconfirm
+            title="Sure to delete?"
+            onConfirm={() => {
+              this.handleDelete(record.key);
+            }}
+          >
+            <Button type="primary" disabled={this.props.disabled}>
+              Delete
+            </Button>
+          </Popconfirm>
+        ) : null
+    }
+  ];
 
   handleDelete = key => {
-      console.log("handleDelete:"+key);
-
-      stageUtil.delEnvByKey(this.props.stageId,key);
-      this.setState({});
-
+    stageUtil.delEnvByKey(this.props.stageId, key);
+    this.setState({});
   };
 
   handleAdd = () => {
-      console.log(
-          "当前的环境变量" + JSON.stringify(stageUtil.getEnvironment(this.props.stageId))
-      );
-      console.log("handleAdd");
-      stageUtil.addEnvironment(this.props.stageId,"defaultKey","defaultValue");
-      console.log(
-          "当前的环境变量" + JSON.stringify(stageUtil.getEnvironment(this.props.stageId))
-      );
-      this.setState({});
-
+    stageUtil.addEnvironment(this.props.stageId, "defaultKey", "defaultValue");
+    this.setState({});
   };
 
   handleSave = row => {
-      console.log("handleSave row json:"+JSON.stringify(row));
-
-      stageUtil.updateEnv(this.props.stageId,row.id, row.key,row.value.value);
-      this.setState({});
+    stageUtil.updateEnv(this.props.stageId, row.id, row.key, row.value.value);
+    this.setState({});
   };
 
   render() {
-      let stageId=this.props.stageId;
-    console.log("当前的stageId：" + stageId);
+    let stageId = this.props.stageId;
 
-    console.log(
-      "当前的环境变量" + JSON.stringify(stageUtil.getEnvironment(stageId))
-    );
-
-    let envList = stageUtil.getEnvironment((stageId));
+    let envList = stageUtil.getEnvironment(stageId);
     const components = {
       body: {
         row: EditableFormRow,
@@ -196,14 +180,12 @@ class EnvironmentEditor extends React.Component {
     });
     return (
       <div>
-
         <Table
           components={components}
           rowClassName={() => "editable-row"}
           dataSource={envList}
           columns={columns}
           pagination={paginationProps}
-          
         />
       </div>
     );
@@ -211,6 +193,6 @@ class EnvironmentEditor extends React.Component {
 }
 export default EnvironmentEditor;
 EnvironmentEditor.propTypes = {
-    stageId: PropTypes.number,
-    disabled:PropTypes.bool
+  stageId: PropTypes.number,
+  disabled: PropTypes.bool
 };

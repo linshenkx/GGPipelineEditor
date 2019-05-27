@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import "./App.css";
 import GGEditor, {
   Flow,
@@ -10,8 +10,6 @@ import GGEditor, {
   NodePanel
 } from "gg-editor";
 import "antd/dist/antd.css";
-import SaveButton from "./my/component/SaveButton";
-import jenkinsContext from "./my/util/JenkinsContext";
 import StepEditor from "./my/editor/steps/StepEditor";
 import TopBar from "./my/component/topBar";
 
@@ -128,26 +126,13 @@ class App extends React.Component {
             data={data}
             graph={graph}
             grid={grid}
-            getSelected={e => {
-              console.log("点击选中" + e);
-            }}
-            onDrop={e => {
-              console.log("放置节点");
-              // console.log(e.item.model);
-            }}
             onAfterItemSelected={e => {
-              console.log("选中后");
-              console.log(e.item.model);
               if (e.item.model.myProps.stageType === "leader") {
                 e.item.model.color = "red";
               }
               if (e.item.model.myProps.stageType === "follower") {
                 e.item.model.color = "green";
               }
-            }}
-            onNodeClick={e => {
-              console.log("点击节点");
-              console.log(e.item.model);
             }}
           />
           <DetailPanel>

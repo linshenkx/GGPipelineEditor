@@ -47,11 +47,7 @@ class StageUtil {
 
 
   getEnvironment = stageId => {
-      console.log("getEnvironment jenkinsContext.stageMap[stageId]:"+JSON.stringify(jenkinsContext.stageMap[stageId]));
-
       let { environment } = jenkinsContext.stageMap[stageId];
-      console.log("getEnvironment environment:"+JSON.stringify(environment));
-
       if(environment){
         return environment;
     }else {
@@ -63,10 +59,8 @@ class StageUtil {
   };
 
   addEnvironment=(stageId,envKey,envValue)=>{
-      console.log(stageId,envKey,envValue);
       let { environment } = jenkinsContext.stageMap[stageId];
       if(environment){
-          console.log("environment json:"+JSON.stringify(environment));
           environment=environment.filter((currentValue)=>{
               return currentValue.key!==envKey;
           });
@@ -97,14 +91,9 @@ class StageUtil {
           }
           return currentValue;
       });
-      console.log("after updateEnv:"+JSON.stringify(jenkinsContext.stageMap[stageId].environment));
-      console.log(
-          "after updateEnv当前的环境变量" + JSON.stringify(stageUtil.getEnvironment(stageId))
-      );
   };
 
   delEnvByKey=(stageId,envKey)=>{
-      console.log("delEnvByKey",stageId,envKey);
       let { environment } = jenkinsContext.stageMap[stageId];
       if(!environment){
           return;

@@ -16,25 +16,17 @@ import pipelineStore from "../../service/PipelineStore";
 const Option = Select.Option;
 class StepEditor extends React.Component {
   newStage = () => {
-    console.log("新建Stage");
-
     const { propsAPI } = this.props;
     let item = propsAPI.getSelected()[0];
     let { model } = item;
-
     let newStage = pipelineStore.createNoneStage("newStage");
     jenkinsContext.stageMap[newStage.id] = newStage;
     jenkinsContext.currentStageId = newStage.id;
-
     model = stepUtil.setStageIdToModel(model, newStage.id);
     model = stepUtil.setStageTypeToModel(model, "leader");
-
     propsAPI.update(item, model);
   };
-
   getAgentEditor = (agent, stageId, disabled) => {
-    console.log("agent:" + agent);
-
     stageUtil.setAgentType(stageId, agent);
     let agentEditor;
     switch (agent) {
@@ -128,10 +120,6 @@ class StepEditor extends React.Component {
         stepEditorDetail = <div>空白编辑区 </div>;
         break;
     }
-    console.log(
-      "before return this.getAgentType(stageId):" +
-        stageUtil.getAgentType(stageId)
-    );
     let agentEditor = this.getAgentEditor(
       stageUtil.getAgentType(stageId),
       stageId,
@@ -156,7 +144,6 @@ class StepEditor extends React.Component {
               onClick={() => {
                 this.newStage();
                 this.setState({});
-                console.log(stageUtil.getEnvironment(stageId));
               }}
             >
               新建stage
@@ -169,8 +156,7 @@ class StepEditor extends React.Component {
         <div className="agent">
           <Alert message="代理" className="text" type="info" />
           <Select
-            // defaultValue={stageUtil.getAgentType(stageId)}
-            defaultValue='any'
+            defaultValue="any"
             style={{ width: 120 }}
             className="Select"
             onChange={option => {
@@ -184,7 +170,6 @@ class StepEditor extends React.Component {
           </Select>
           {agentEditor}
         </div>
-
         <div className="evironment">
           <Alert message="环境变量" className="text" type="info" />
           <EnvironmentEditor

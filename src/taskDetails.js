@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Button, Alert, message, Card, Col, Row } from "antd";
+import { Input, Button, Alert,Card } from "antd";
 import jenkinsContext from "./my/util/JenkinsContext";
 import "./taskDetails.css";
 const gridStyle = {

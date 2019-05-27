@@ -1,14 +1,10 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
-import SaveButton from "./SaveButton";
+import React from "react";
 import PropTypes from "prop-types";
 import { Input, Button, Alert, message, Select, Checkbox } from "antd";
 import jenkinsContext from "../util/JenkinsContext";
 import pipelineStore from "../service/PipelineStore";
 import { convertInternalModelToJson } from "../service/PipelineSyntaxConverter";
 import { withPropsAPI } from "gg-editor";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import { Base64 } from "js-base64";
 const Option = Select.Option;
 class topBar extends React.Component {
   constructor(props) {
@@ -25,8 +21,6 @@ class topBar extends React.Component {
     if (jenkinsContext.jobName === "") {
       message.error("请输入任务名！");
     }
-    console.log("保存:" + JSON.stringify(data));
-
     //获取起始节点的stage,完成全局初始化
     let nodeList = data.nodes;
     let edgeList = data.edges;
@@ -35,37 +29,21 @@ class topBar extends React.Component {
     })[0];
 
     let contextStage = jenkinsContext.stageMap[9999];
-
-    console.log("contextStage:" + JSON.stringify(contextStage));
-
     pipelineStore.setPipeline(JSON.parse(JSON.stringify(contextStage)));
-    console.log(
-      "pipelineStore.pipeline:" + JSON.stringify(pipelineStore.pipeline)
-    );
     if (!edgeList) {
       message.error("起始节点未连接！");
-      console.log("起始节点未连接！");
       return;
     }
     let currentEdges = edgeList.filter(currentValue => {
       return currentValue.source === "00000";
     });
     if (currentEdges.length !== 1) {
-      console.log(
-        contextNode.label +
-          "节点" +
-          contextNode.id +
-          "有" +
-          currentEdges.length +
-          "条边！"
-      );
       return;
     }
     let currentEdge = currentEdges[0];
     let currentStage = JSON.parse(JSON.stringify(contextStage));
 
     while (currentEdge) {
-      console.log("currentEdge:" + JSON.stringify(currentEdge));
       //找出下一节点
       let targetId = currentEdge.target;
       let currentNode = nodeList.filter(currentValue => {
@@ -78,34 +56,17 @@ class topBar extends React.Component {
         currentStage = JSON.parse(
           JSON.stringify(jenkinsContext.stageMap[currentNode.myProps.stageId])
         );
-        console.log("addSequentialStage:" + currentStage);
         pipelineStore.addSequentialStage(currentStage);
       }
-      console.log("add step:" + JSON.stringify(currentNode.myProps.step));
       pipelineStore.addOldStep(currentStage, null, currentNode.myProps.step);
-
       let currentEdges = edgeList.filter(currentValue => {
         return currentValue.source === currentNode.id;
       });
       if (currentEdges.length !== 1) {
-        console.log(
-          currentNode.label +
-            "节点" +
-            currentNode.id +
-            "有" +
-            currentEdges.length +
-            "条边！"
-        );
         break;
       }
       currentEdge = currentEdges[0];
     }
-
-    console.log(
-      "convertInternalModelToJson:" +
-        JSON.stringify(convertInternalModelToJson(pipelineStore.pipeline))
-    );
-
     //第一个请求，获取jenkinsfile
     fetch(
       "http://149.129.127.108:9090/job/convert/jsonToJenkinsfile?jenkinsJson=" +
@@ -120,44 +81,39 @@ class topBar extends React.Component {
     )
       .then(res => res.json())
       .then(data => {
-        console.log("获取到jenkinsFile:" + data.data.jenkinsfile);
         jenkinsContext.jenkinsfile = data.data.jenkinsfile;
-        console.log(encodeURIComponent(jenkinsContext.jenkinsfile));
-        
+        jenkinsContext.jenkinsfile = encodeURIComponent(
+          jenkinsContext.jenkinsfile
+        );
         if (data.data.result === "failure") {
           message.error("缺少请求参数！");
         }
       })
-      .catch(err => {
-        console.log("error json:" + JSON.stringify(err));
+      .then(() => {
+        fetch(
+          "http://149.129.127.108:9090/job/create?description=" + 
+            jenkinsContext.description +
+            "&init=" +
+            jenkinsContext.isAutoRun +
+            "&jenkinsfile=" +
+            jenkinsContext.jenkinsfile +
+            "&jobName=" +
+            jenkinsContext.jobName +
+            "&jobType=" +
+            jenkinsContext.dataList[0] +
+            "&projectUrl=" +
+            jenkinsContext.handleURL +
+            "&userId=" +
+            jenkinsContext.userId,
+          {
+            method: "POST"
+          }
+        )
+          .then(res => res.json())
+          .then(data => {
+            // console.log(data);
+          });
       });
-    console.log(jenkinsContext.isAutoRun);
-    console.log(jenkinsContext.jenkinsfile);
-    //第二个请求，运行
-    fetch(
-      "http://149.129.127.108:9090/job/create?description=" +
-        jenkinsContext.description +
-        "&init=" +
-        jenkinsContext.isAutoRun +
-        "&jenkinsfile=" +
-        encodeURIComponent(jenkinsContext.jenkinsfile) +
-        "&jobName=" +
-        jenkinsContext.jobName +
-        "&jobType=" +
-        jenkinsContext.dataList[0] +
-        "&projectUrl=" +
-        jenkinsContext.handleURL +
-        "&userId=" +
-        jenkinsContext.userId,
-      {
-        method: "POST"
-      }
-    )
-      .then(res => res.json())
-      .then(data => {
-        console.log("任务资料" + JSON.stringify(data));
-      });
-    console.log("contextStage last:" + JSON.stringify(contextStage));
   };
   handleSaveClick = () => {
     const { propsAPI } = this.props;
@@ -178,20 +134,17 @@ class topBar extends React.Component {
     )
       .then(res => res.json())
       .then(data => {
-        console.log(data);
+        // console.log(data);
       });
   };
   render() {
     var _this = this;
     function getUser(userId) {
-      console.log("你点击了登录按钮");
       fetch("http://149.129.127.108:9090/user?userId=" + userId)
         .then(res => res.json())
         .then(data => {
-          console.log(data);
           if (data.code === 200) {
             message.success("登录成功！");
-            console.log("获取主机名称：" + data.data);
             jenkinsContext.isLogin = !jenkinsContext.isLogin;
             jenkinsContext.IPaddress = data.data;
             _this.setState({
@@ -208,18 +161,14 @@ class topBar extends React.Component {
         });
     }
     function getTaskList(userId) {
-      console.log("正在获取任务类型...");
       fetch("http://149.129.127.108:9090/job/types?userId=" + userId)
         .then(res => res.json())
         .then(data => {
-          console.log(data.data);
           jenkinsContext.dataList = data.data;
-          // console.log("jenkinsContext:" + jenkinsContext.dataList[0]);
           _this.setState({ dataList: data.data });
         });
     }
     function handleChange(value) {
-      console.log(`selected ${value}`);
     }
     return (
       <div className="TopBar">
@@ -236,11 +185,7 @@ class topBar extends React.Component {
                 size="large"
                 placeholder="id"
                 onChange={e => {
-                  console.log(e.target.value);
                   jenkinsContext.userId = e.target.value;
-                  // this.setState({
-                  //   userId:e.target.value
-                  // })
                 }}
               />
             </div>
@@ -274,8 +219,7 @@ class topBar extends React.Component {
             </div>
           </div>
         </div>
-        {/* http://localhost:3000/#/taskDetails */}
-        <Button type="primary" size="large" className="taskDetails">
+        <Button type="primary" size="large" className="taskDetails" disabled={true}>
           <a href="#/taskDetails">查看任务详情</a>
         </Button>
         <Button
@@ -311,7 +255,6 @@ class topBar extends React.Component {
               placeholder="Job Name"
               onChange={e => {
                 jenkinsContext.jobName = e.target.value;
-                console.log(jenkinsContext.jobName);
               }}
             />
             <Select
@@ -327,7 +270,6 @@ class topBar extends React.Component {
               placeholder="接受触发工程URL"
               onChange={e => {
                 jenkinsContext.handleURL = e.target.value;
-                console.log(jenkinsContext.handleURL);
               }}
             />
             <Input
@@ -336,14 +278,12 @@ class topBar extends React.Component {
               id="todoCheck"
               onChange={e => {
                 jenkinsContext.description = e.target.value;
-                console.log(jenkinsContext.description);
               }}
             />
             <Checkbox
               onChange={e => {
                 console.log(`checked = ${e.target.checked}`);
-                jenkinsContext.isAutoRun = e.target.checked&&true;
-                console.log(jenkinsContext.isAutoRun);
+                jenkinsContext.isAutoRun = e.target.checked && true;
               }}
               defaultChecked={true}
             >
