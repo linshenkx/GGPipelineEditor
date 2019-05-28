@@ -18,6 +18,12 @@ export type StageInfo = {
     environment: EnvironmentEntryInfo[],
     // eslint-disable-next-line no-use-before-define
     agent: StepInfo,
+    post: PostInfo[],
+};
+
+export type PostInfo={
+    condition:string,
+    steps: StepInfo[],
 };
 
 export type EnvironmentEntryInfo ={
@@ -311,6 +317,35 @@ class PipelineStore {
         this.notify();
     }
 
+    addOldPost(selectedStage: StageInfo, post: any):PostInfo{
+        if (!selectedStage) {
+            throw new Error('Must provide a stage to add steps');
+        }
+
+        const oldPostsForStage = selectedStage.post || [];
+        let newPostsForStage = oldPostsForStage;
+
+        newPostsForStage = [...newPostsForStage, post];
+
+        selectedStage.post = newPostsForStage;
+        this.notify();
+        return post;
+    }
+
+    addOldStepToPost(selectedPost: PostInfo, step: any): StepInfo {
+        if (!selectedPost) {
+            throw new Error('Must provide a post to add steps');
+        }
+
+        const oldStepsForPost = selectedPost.steps || [];
+        let newStepsForPost = oldStepsForPost;
+
+        newStepsForPost = [...newStepsForPost, step];
+
+        selectedPost.steps = newStepsForPost;
+        this.notify();
+        return step;
+    }
     addOldStep(selectedStage: StageInfo, parentStep: StepInfo, step: any): StepInfo {
         if (!selectedStage) {
             throw new Error('Must provide a stage to add steps');

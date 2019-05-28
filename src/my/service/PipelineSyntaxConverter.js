@@ -42,12 +42,18 @@ export type PipelineStep = {
     arguments: PipelineValueDescriptor | PipelineNamedValueDescriptor[],
 };
 
+export type PipelinePost={
+    condition: string,
+    branches?: PipelineStage[],
+}
+
 export type PipelineStage = {
     name: string,
     branches?: PipelineStage[],
     agent?: PipelineValueDescriptor[],
     steps?: PipelineStep[],
     environment?: PipelineNamedValueDescriptor[],
+    post?:PipelinePost[],
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -316,6 +322,10 @@ export function convertStageToJson(stage: StageInfo): PipelineStage {
         out.branches = [outBranch];
     }
 
+    if(stage.post && stage.post.length){
+        out.post={"conditions":convertPostsToJson(stage.post)};
+    }
+
     return out;
 }
 
@@ -338,8 +348,30 @@ export function convertInternalModelToJson(pipeline: PipelineInfo): PipelineJson
         const s = convertStageToJson(stage);
         outPipeline.stages.push(s);
     }
+
+    if(pipeline.post && pipeline.post.length){
+        outPipeline.post={"conditions":convertPostsToJson(pipeline.post)};
+    }
+
     return out;
 }
+
+export function convertPostsToJson(posts: PostInfo[]): PipelinePost[] {
+    const out: PipelinePost[] = [];
+    for (const post of posts) {
+        const s: PipelinePost = {
+            condition: post.condition,
+        };
+        const outBranch = {
+            name: 'default',
+            steps: convertStepsToJson(post.steps),
+        };
+        s.branches = [outBranch];
+        out.push(s);
+    }
+    return out;
+}
+
 export function convertPipelineToJson(pipeline: string, handler: Function) {
     pipelineMetadataService.getStepListing(steps => {
         fetch('/pipeline-model-converter/toJson', 'jenkinsfile=' + encodeURIComponent(pipeline), data => {

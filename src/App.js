@@ -12,6 +12,9 @@ import GGEditor, {
 import "antd/dist/antd.css";
 import StepEditor from "./my/editor/steps/StepEditor";
 import TopBar from "./my/component/topBar";
+import pipelineStore from "./my/service/PipelineStore";
+import jenkinsContext from "./my/util/JenkinsContext";
+import {convertInternalModelToJson} from "./my/service/PipelineSyntaxConverter";
 
 class App extends React.Component {
   render() {
@@ -44,8 +47,33 @@ class App extends React.Component {
       cell: 1
     };
     return (
+
       <div className="App ">
         <GGEditor className="GGEditor">
+            <button
+                onClick={() => {
+                    let anyStage = pipelineStore.createAnyStage("test");
+                    let post={
+                        "condition":"always",
+                    };
+                    let step={
+                        id: 123,
+                        name: "testName",
+                        label: "testLabel",
+                        isContainer: false,
+                        data: {},
+                    };
+                    pipelineStore.addOldStepToPost(post,step);
+                    pipelineStore.addOldPost(anyStage,post);
+                    pipelineStore.setPipeline(anyStage);
+
+                    console.log(
+                        "convertInternalModelToJson:" +
+                        JSON.stringify(convertInternalModelToJson(pipelineStore.pipeline))
+                    );
+                }
+                }
+            >测试</button>
           <TopBar id="TopBar" />
           <Toolbar className="Toolbar">
             <Command name="clear" className="item">
