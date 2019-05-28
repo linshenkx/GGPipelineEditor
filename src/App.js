@@ -7,14 +7,16 @@ import GGEditor, {
   Command,
   Toolbar,
   DetailPanel,
-  NodePanel
+  NodePanel,
+  EdgePanel
 } from "gg-editor";
 import "antd/dist/antd.css";
 import StepEditor from "./my/editor/function/StepEditor";
+import EdgeEditor from "./my/editor/EdgeEditor";
 import TopBar from "./my/component/topBar";
 import pipelineStore from "./my/service/PipelineStore";
 import jenkinsContext from "./my/util/JenkinsContext";
-import {convertInternalModelToJson} from "./my/service/PipelineSyntaxConverter";
+import { convertInternalModelToJson } from "./my/service/PipelineSyntaxConverter";
 import NodeEditor from "./my/editor/NodeEditor";
 
 class App extends React.Component {
@@ -48,33 +50,35 @@ class App extends React.Component {
       cell: 1
     };
     return (
-
       <div className="App ">
         <GGEditor className="GGEditor">
-            <button
-                onClick={() => {
-                    let anyStage = pipelineStore.createAnyStage("test");
-                    let post={
-                        "condition":"always",
-                    };
-                    let step={
-                        id: 123,
-                        name: "testName",
-                        label: "testLabel",
-                        isContainer: false,
-                        data: {},
-                    };
-                    pipelineStore.addOldStepToPost(post,step);
-                    pipelineStore.addOldPost(anyStage,post);
-                    pipelineStore.setPipeline(anyStage);
+          <button
+            onClick={() => {
+              let anyStage = pipelineStore.createAnyStage("test");
+              let post = {
+                condition: "always"
+              };
+              let step = {
+                id: 123,
+                name: "testName",
+                label: "testLabel",
+                isContainer: false,
+                data: {}
+              };
+              pipelineStore.addOldStepToPost(post, step);
+              pipelineStore.addOldPost(anyStage, post);
+              pipelineStore.setPipeline(anyStage);
 
-                    console.log(
-                        "convertInternalModelToJson:" +
-                        JSON.stringify(convertInternalModelToJson(pipelineStore.pipeline))
-                    );
-                }
-                }
-            >测试</button>
+              console.log(
+                "convertInternalModelToJson:" +
+                  JSON.stringify(
+                    convertInternalModelToJson(pipelineStore.pipeline)
+                  )
+              );
+            }}
+          >
+            测试
+          </button>
           <TopBar id="TopBar" />
           <Toolbar className="Toolbar">
             <Command name="clear" className="item">
@@ -111,37 +115,36 @@ class App extends React.Component {
             </Command>
           </Toolbar>
           <ItemPanel className="ItemPanel">
-              结构节点
-              <Item
-                  type="node"
-                  size="72*72"
-                  shape="flow-circle"
-                  model={{
-                      color: "blue",
-                      label: "when",
-                      myProps: {
-                          type:"structure",
-                          stepType: "when",
-                      }
-                  }}
-                  src="http://prsv4ko2y.bkt.clouddn.com/when.svg"
-              />
-              <Item
-                  type="node"
-                  size="72*72"
-                  shape="flow-circle"
-                  model={{
-                      color: "blue",
-                      label: "post",
-                      myProps: {
-                          type:"structure",
-                          stepType: "post"
-                      }
-                  }}
-                  src="http://prsv4ko2y.bkt.clouddn.com/post.svg"
-              />
-
-              功能节点
+            结构节点
+            <Item
+              type="node"
+              size="72*72"
+              shape="flow-circle"
+              model={{
+                color: "blue",
+                label: "when",
+                myProps: {
+                  type: "structure",
+                  stepType: "when"
+                }
+              }}
+              src="http://prsv4ko2y.bkt.clouddn.com/when.svg"
+            />
+            <Item
+              type="node"
+              size="72*72"
+              shape="flow-circle"
+              model={{
+                color: "blue",
+                label: "post",
+                myProps: {
+                  type: "structure",
+                  stepType: "post"
+                }
+              }}
+              src="http://prsv4ko2y.bkt.clouddn.com/post.svg"
+            />
+            功能节点
             <Item
               type="node"
               size="72*72"
@@ -150,7 +153,7 @@ class App extends React.Component {
                 color: "red",
                 label: "shellScript",
                 myProps: {
-                  type:"function",
+                  type: "function",
                   stepType: "sh"
                 }
               }}
@@ -164,8 +167,8 @@ class App extends React.Component {
                 color: "green",
                 label: "echo",
                 myProps: {
-                    type:"function",
-                    stepType: "echo"
+                  type: "function",
+                  stepType: "echo"
                 }
               }}
               src="http://prsv4ko2y.bkt.clouddn.com/echo.svg"
@@ -178,24 +181,31 @@ class App extends React.Component {
                 color: "blue",
                 label: "git",
                 myProps: {
-                    type:"function",
-                    stepType: "git"
+                  type: "function",
+                  stepType: "git"
                 }
               }}
               src="http://prr2i4muo.bkt.clouddn.com/git.svg"
             />
-
           </ItemPanel>
           <Flow
             data={data}
             graph={graph}
             grid={grid}
             onAfterItemSelected={e => {
-              if (e.item.model.myProps.stageType === "leader") {
-                e.item.model.color = "red";
+              if (e.item.type === "node") {
+                console.log("你点中了节点");
+                if (e.item.model.myProps.stageType === "leader") {
+                  e.item.model.color = "red";
+                }
+                if (e.item.model.myProps.stageType === "follower") {
+                  e.item.model.color = "green";
+                }
               }
-              if (e.item.model.myProps.stageType === "follower") {
-                e.item.model.color = "green";
+              if (e.item.type === "edge") {
+                console.log(e.item);
+                console.log("你点中了边线");
+
               }
             }}
           />
@@ -203,6 +213,9 @@ class App extends React.Component {
             <NodePanel>
               <NodeEditor />
             </NodePanel>
+            <EdgePanel>
+              <EdgeEditor />
+            </EdgePanel>
           </DetailPanel>
         </GGEditor>
       </div>

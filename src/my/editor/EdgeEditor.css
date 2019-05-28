@@ -1,0 +1,6 @@
+.edgeWrapper{
+  width: 408%;
+}
+.edgeSelect,.edgeOption{
+  width: 100% !important;
+}
