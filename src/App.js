@@ -204,8 +204,11 @@ class App extends React.Component {
               }
               if (e.item.type === "edge") {
                 console.log(e.item);
-                console.log("你点中了边线");
 
+                console.log("你点中了边线");
+                // graph.addItem("edge", {
+                //   label:"true"
+                // });
               }
             }}
           />

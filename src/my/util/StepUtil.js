@@ -1,77 +1,78 @@
 import idgen from "../service/IdGenerator";
 
 class StepUtil {
-    getDefaultStep=(name)=>{
-        return {
-            id: idgen.next(),
-            isContainer: false,
-            children: [],
-            name: name,
-            label: "",
-            data: {},
-            script:""
-        };
+  getDefaultStep = name => {
+    return {
+      id: idgen.next(),
+      isContainer: false,
+      children: [],
+      name: name,
+      label: "",
+      data: {},
+      script: ""
     };
-    getStepFromModel=(model)=>{
-        let {myProps}=model;
-        if(myProps && myProps.step){
-            return  myProps.step;
-        }
-    };
+  };
+  getStepFromModel = model => {
+    let { myProps } = model;
+    if (myProps && myProps.step) {
+      return myProps.step;
+    }
+  };
 
-    setStepToModel=(model,step)=>{
-        if(!model.myProps){
-            model.myProps={};
-        }
-        model.myProps.step=step;
-        return model;
-    };
+  setStepToModel = (model, step) => {
+    if (!model.myProps) {
+      model.myProps = {};
+    }
+    model.myProps.step = step;
+    return model;
+  };
 
-    getStageTypeFromModel= (model) =>{
-        let {myProps}=model;
-        if(myProps && myProps.stageType){
-            return  myProps.stageType;
-        }
+  getStageTypeFromModel = model => {
+    let { myProps } = model;
+    if (myProps && myProps.stageType) {
+      return myProps.stageType;
+    }
+  };
+  setStageTypeToModel = (model, stageType) => {
+    if (!model.myProps) {
+      model.myProps = {};
+    }
+    model.myProps.stageType = stageType;
+    return model;
+  };
+  setEdgeType = (model, text) => {
+    model.label = text;
+    model.labelRectStyle = {
+      opacity: 0.1,
+      fill: "red"
     };
-    setStageTypeToModel= (model,stageType)=>{
-        if(!model.myProps){
-            model.myProps={};
-        }
-        model.myProps.stageType=stageType;
-        return model;
-    };
+    return model;
+  };
+  getStageIdFromModel = model => {
+    let { myProps } = model;
+    if (myProps && myProps.stageId) {
+      return myProps.stageId;
+    }
+  };
+  setStageIdToModel = (model, stageId) => {
+    if (!model.myProps) {
+      model.myProps = {};
+    }
+    model.myProps.stageId = stageId;
+    return model;
+  };
+  getStepTypeFromModel = model => {
+    let { myProps } = model;
+    if (myProps && myProps.stepType) {
+      return myProps.stepType;
+    }
+  };
 
-    getStageIdFromModel= (model)=> {
-        let {myProps}=model;
-        if(myProps && myProps.stageId){
-            return  myProps.stageId;
-        }
-    };
-    setStageIdToModel=(model,stageId)=>{
-        if(!model.myProps){
-            model.myProps={};
-        }
-        model.myProps.stageId=stageId;
-        return model;
-    };
-    getStepTypeFromModel=(model) =>{
-        let {myProps}=model;
-        if(myProps && myProps.stepType){
-            return  myProps.stepType;
-        }
-    };
-
-    getTypeFromModel=(model) =>{
-        let {myProps}=model;
-        if(myProps && myProps.type){
-            return  myProps.type;
-        }
-    };
-
-
-
+  getTypeFromModel = model => {
+    let { myProps } = model;
+    if (myProps && myProps.type) {
+      return myProps.type;
+    }
+  };
 }
-export const stepUtil=new StepUtil();
-
-
-
+export const stepUtil = new StepUtil();
