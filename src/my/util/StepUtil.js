@@ -60,13 +60,14 @@ class StepUtil {
             return  myProps.stepType;
         }
     };
-    setStepTypeToModel=(model,stepType)=>{
-        if(!model.myProps){
-            model.myProps={};
+
+    getTypeFromModel=(model) =>{
+        let {myProps}=model;
+        if(myProps && myProps.type){
+            return  myProps.type;
         }
-        model.myProps.stepType=stepType;
-        return model;
     };
+
 
 
 }

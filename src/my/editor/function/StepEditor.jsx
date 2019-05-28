@@ -1,15 +1,13 @@
 import React from "react";
-import { withPropsAPI } from "gg-editor";
-import "./ShellScriptStepEditor.css";
+import {withPropsAPI} from "gg-editor";
+import "./steps/ShellScriptStepEditor.css";
 import "./StepEditor.css";
 import EnvironmentEditor from "./EnvironmentEditor";
 import "antd/dist/antd.css";
 import { Input, Select, Button, Alert } from "antd";
-import ShellScriptStepEditor from "./ShellScriptStepEditor";
-import EchoStepEditor from "./EchoStepEditor";
-import GitStepEditor from "./GitStepEditor";
-import PostStepEditor from "./PostStepEditor";
-import WhenStepEditor from "./WhenStepEditor";
+import ShellScriptStepEditor from "./steps/ShellScriptStepEditor";
+import EchoStepEditor from "./steps/EchoStepEditor";
+import GitStepEditor from "./steps/GitStepEditor";
 
 import { stepUtil } from "../../util/StepUtil";
 import { stageUtil } from "../../util/StageUtil";
@@ -117,12 +115,6 @@ class StepEditor extends React.Component {
         break;
       case "git":
         stepEditorDetail = <GitStepEditor />;
-        break;
-      case "post":
-        stepEditorDetail = <PostStepEditor />;
-        break;
-      case "when":
-        stepEditorDetail = <WhenStepEditor />;
         break;
       default:
         stepEditorDetail = <div>空白编辑区 </div>;

@@ -1,12 +1,12 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { getArg, setArg } from "../../service/ArgService";
-import { withPropsAPI } from "gg-editor";
+import { getArg, setArg } from "../../../service/ArgService";
+import {withPropsAPI} from "gg-editor";
 import "./ShellScriptStepEditor.css";
 import "antd/dist/antd.css";
 import { Input } from "antd";
 
-import { stepUtil } from "../../util/StepUtil";
+import { stepUtil } from "../../../util/StepUtil";
 const { TextArea } = Input;
 class ShellScriptStepEditor extends React.Component {
   textChanged = (name, targetValue) => {

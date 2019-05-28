@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getArg, setArg } from '../../service/ArgService';
-import { withPropsAPI } from 'gg-editor';
-import './ShellScriptStepEditor.css';
+import {withPropsAPI} from "gg-editor";
+import '../function/steps/ShellScriptStepEditor.css';
 import 'antd/dist/antd.css';
 import { Input} from 'antd';
 

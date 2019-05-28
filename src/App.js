@@ -10,11 +10,12 @@ import GGEditor, {
   NodePanel
 } from "gg-editor";
 import "antd/dist/antd.css";
-import StepEditor from "./my/editor/steps/StepEditor";
+import StepEditor from "./my/editor/function/StepEditor";
 import TopBar from "./my/component/topBar";
 import pipelineStore from "./my/service/PipelineStore";
 import jenkinsContext from "./my/util/JenkinsContext";
 import {convertInternalModelToJson} from "./my/service/PipelineSyntaxConverter";
+import NodeEditor from "./my/editor/NodeEditor";
 
 class App extends React.Component {
   render() {
@@ -110,6 +111,37 @@ class App extends React.Component {
             </Command>
           </Toolbar>
           <ItemPanel className="ItemPanel">
+              结构节点
+              <Item
+                  type="node"
+                  size="72*72"
+                  shape="flow-circle"
+                  model={{
+                      color: "blue",
+                      label: "when",
+                      myProps: {
+                          type:"structure",
+                          stepType: "when",
+                      }
+                  }}
+                  src="http://prsv4ko2y.bkt.clouddn.com/when.svg"
+              />
+              <Item
+                  type="node"
+                  size="72*72"
+                  shape="flow-circle"
+                  model={{
+                      color: "blue",
+                      label: "post",
+                      myProps: {
+                          type:"structure",
+                          stepType: "post"
+                      }
+                  }}
+                  src="http://prsv4ko2y.bkt.clouddn.com/post.svg"
+              />
+
+              功能节点
             <Item
               type="node"
               size="72*72"
@@ -118,6 +150,7 @@ class App extends React.Component {
                 color: "red",
                 label: "shellScript",
                 myProps: {
+                  type:"function",
                   stepType: "sh"
                 }
               }}
@@ -131,7 +164,8 @@ class App extends React.Component {
                 color: "green",
                 label: "echo",
                 myProps: {
-                  stepType: "echo"
+                    type:"function",
+                    stepType: "echo"
                 }
               }}
               src="http://prsv4ko2y.bkt.clouddn.com/echo.svg"
@@ -144,37 +178,13 @@ class App extends React.Component {
                 color: "blue",
                 label: "git",
                 myProps: {
-                  stepType: "git"
+                    type:"function",
+                    stepType: "git"
                 }
               }}
               src="http://prr2i4muo.bkt.clouddn.com/git.svg"
             />
-            <Item
-              type="node"
-              size="72*72"
-              shape="flow-circle"
-              model={{
-                color: "blue",
-                label: "when",
-                myProps: {
-                  stepType: "when"
-                }
-              }}
-              src="http://prsv4ko2y.bkt.clouddn.com/when.svg"
-            />
-            <Item
-              type="node"
-              size="72*72"
-              shape="flow-circle"
-              model={{
-                color: "blue",
-                label: "post",
-                myProps: {
-                  stepType: "post"
-                }
-              }}
-              src="http://prsv4ko2y.bkt.clouddn.com/post.svg"
-            />
+
           </ItemPanel>
           <Flow
             data={data}
@@ -191,7 +201,7 @@ class App extends React.Component {
           />
           <DetailPanel>
             <NodePanel>
-              <StepEditor />
+              <NodeEditor />
             </NodePanel>
           </DetailPanel>
         </GGEditor>

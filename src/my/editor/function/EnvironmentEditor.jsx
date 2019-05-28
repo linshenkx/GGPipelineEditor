@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import React from "react";
-import { Table, Input, Button, Popconfirm, Form } from "antd";
+import { Table, Input, Button, Popconfirm, Form } from "antd/lib/index";
 
 import { stageUtil } from "../../util/StageUtil";
 import PropTypes from "prop-types";

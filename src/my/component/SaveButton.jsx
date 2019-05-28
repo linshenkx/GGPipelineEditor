@@ -2,7 +2,7 @@ import React from "react";
 import { withPropsAPI } from "gg-editor";
 import { Button ,message} from "antd";
 import PropTypes from "prop-types";
-import "../editor/steps/StepEditor.css";
+import "../editor/function/StepEditor.css";
 import jenkinsContext from "../util/JenkinsContext";
 import pipelineStore from "../service/PipelineStore";
 import { convertInternalModelToJson } from "../service/PipelineSyntaxConverter";
