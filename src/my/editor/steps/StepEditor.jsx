@@ -19,7 +19,7 @@ class StepEditor extends React.Component {
     const { propsAPI } = this.props;
     let item = propsAPI.getSelected()[0];
     let { model } = item;
-    let newStage = pipelineStore.createNoneStage("newStage");
+    let newStage = pipelineStore.createAnyStage("newStage");
     jenkinsContext.stageMap[newStage.id] = newStage;
     jenkinsContext.currentStageId = newStage.id;
     model = stepUtil.setStageIdToModel(model, newStage.id);

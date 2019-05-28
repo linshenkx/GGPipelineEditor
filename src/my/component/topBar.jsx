@@ -18,9 +18,6 @@ class topBar extends React.Component {
     };
   }
   resolveData = data => {
-    if (jenkinsContext.jobName === "") {
-      message.error("请输入任务名！");
-    }
     //获取起始节点的stage,完成全局初始化
     let nodeList = data.nodes;
     let edgeList = data.edges;
@@ -67,6 +64,7 @@ class topBar extends React.Component {
       }
       currentEdge = currentEdges[0];
     }
+
     //第一个请求，获取jenkinsfile
     fetch(
       "http://149.129.127.108:9090/job/convert/jsonToJenkinsfile?jenkinsJson=" +
@@ -86,12 +84,12 @@ class topBar extends React.Component {
           jenkinsContext.jenkinsfile
         );
         if (data.data.result === "failure") {
-          message.error("缺少请求参数！");
+          // message.error("缺少输入脚本！");
         }
       })
       .then(() => {
         fetch(
-          "http://149.129.127.108:9090/job/create?description=" + 
+          "http://149.129.127.108:9090/job/create?description=" +
             jenkinsContext.description +
             "&init=" +
             jenkinsContext.isAutoRun +
@@ -120,6 +118,14 @@ class topBar extends React.Component {
     let data = propsAPI.save();
     this.resolveData(data);
   };
+  validate = name => {
+    console.log("点击校验按钮");
+    console.log(name);
+
+    if (!name) {
+      message.error("缺少参数！");
+    }
+  };
   saveData = () => {
     fetch(
       "http://149.129.127.108:9090/job/jobData?jobData=" +
@@ -135,6 +141,9 @@ class topBar extends React.Component {
       .then(res => res.json())
       .then(data => {
         // console.log(data);
+        if (data.data === "undefined") {
+          // message.error("请输入任务名！");
+        }
       });
   };
   render() {
@@ -168,8 +177,8 @@ class topBar extends React.Component {
           _this.setState({ dataList: data.data });
         });
     }
-    function handleChange(value) {
-    }
+    function handleChange(value) {}
+
     return (
       <div className="TopBar">
         <div>
@@ -219,7 +228,12 @@ class topBar extends React.Component {
             </div>
           </div>
         </div>
-        <Button type="primary" size="large" className="taskDetails" disabled={true}>
+        <Button
+          type="primary"
+          size="large"
+          className="taskDetails"
+          disabled={true}
+        >
           <a href="#/taskDetails">查看任务详情</a>
         </Button>
         <Button
@@ -240,6 +254,9 @@ class topBar extends React.Component {
           id="saveBtn"
           type="primary"
           onClick={() => {
+            this.validate(jenkinsContext.jobName);
+            this.validate(jenkinsContext.dataList);
+            this.validate(jenkinsContext.handleURL);
             this.saveData();
             this.handleSaveClick();
           }}
@@ -247,7 +264,13 @@ class topBar extends React.Component {
         >
           保存并运行
         </Button>
-
+        {/* <Button
+          onClick={() => {
+            this.validate(jenkinsContext.jobName);
+          }}
+        >
+          点击校验
+        </Button> */}
         <div>
           <div className="navInput">
             <Input
