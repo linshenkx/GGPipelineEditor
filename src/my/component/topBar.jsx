@@ -109,6 +109,7 @@ class topBar extends React.Component {
         )
           .then(res => res.json())
           .then(data => {
+            message.success("请求保存成功，正在运行..");
             // console.log(data);
           });
       });
@@ -144,6 +145,26 @@ class topBar extends React.Component {
         if (data.data === "undefined") {
           // message.error("请输入任务名！");
         }
+      });
+  };
+  taskDetails = () => {
+    console.log("点击查看详情信息");
+    message.loading("请求数据中..", 0);
+    fetch(
+      "http://149.129.127.108:9090/job/detail?jobName=git-checkout&userId=aaa"
+    )
+      .then(res => res.json())
+      .then(data => {
+        message.destroy();
+        console.log(data.data);
+        jenkinsContext.isRunning = data.data.buildModels[0].building;
+        jenkinsContext.state = data.data.buildModels[0].result;
+        jenkinsContext.id = data.data.buildModels[0].id;
+        jenkinsContext.shortDescription =
+          data.data.buildModels[0].actions[0].causes[0].shortDescription;
+        jenkinsContext.duration = data.data.buildModels[0].duration;
+        jenkinsContext.timestamp = data.data.buildModels[0].timestamp;
+        
       });
   };
   render() {
@@ -232,7 +253,9 @@ class topBar extends React.Component {
           type="primary"
           size="large"
           className="taskDetails"
-          disabled={true}
+          onClick={() => {
+            this.taskDetails(jenkinsContext.jobName, jenkinsContext.userId);
+          }}
         >
           <a href="#/taskDetails">查看任务详情</a>
         </Button>
@@ -264,13 +287,6 @@ class topBar extends React.Component {
         >
           保存并运行
         </Button>
-        {/* <Button
-          onClick={() => {
-            this.validate(jenkinsContext.jobName);
-          }}
-        >
-          点击校验
-        </Button> */}
         <div>
           <div className="navInput">
             <Input

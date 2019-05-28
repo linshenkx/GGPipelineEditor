@@ -1,20 +1,63 @@
 import React from "react";
-import { Input, Button, Alert,Card } from "antd";
+import { Input, Button, Alert, Table, Divider, Tag } from "antd";
 import jenkinsContext from "./my/util/JenkinsContext";
 import "./taskDetails.css";
-const gridStyle = {
-  width: "50%",
-  textAlign: "center"
-};
-const gridStyle2 = {
-  width: "50%",
-  textAlign: "center"
-};
+
+// const data = [
+//   {
+//     key: "1",
+//     result: this.state.result,
+//     ID: this.state.ID,
+//     shortDescription: this.state.shortDescription,
+//     duration: this.state.duration,
+//     timestamp: this.state.timestamp
+//   }
+// ];
+// const columns = [
+//   {
+//     title: "状态",
+//     dataIndex: "result",
+//     key: "result",
+//     render: result => (
+//       <Tag color={result === "SUCCESS" ? "green" : "red"} key={result}>
+//         {result.toUpperCase()}
+//       </Tag>
+//     )
+//   },
+//   {
+//     title: "ID",
+//     dataIndex: "ID",
+//     key: "ID"
+//   },
+//   {
+//     title: "触发信息",
+//     dataIndex: "shortDescription",
+//     key: "trigger"
+//   },
+//   {
+//     title: "持续时间",
+//     key: "duration",
+//     dataIndex: "duration"
+//   },
+//   {
+//     title: "执行日期",
+//     key: "timestamp",
+//     dataIndex: "timestamp"
+//   }
+// ];
+
 export default class TaskDetails extends React.Component {
+  state={
+    state:jenkinsContext.result,
+    ID:jenkinsContext.id,
+    trigger:jenkinsContext.id,
+    shortDescription:jenkinsContext.shortDescription,
+    duration:jenkinsContext.duration,
+    timestamp:jenkinsContext.timestamp,
+  }
   componentDidMount() {
     console.log(jenkinsContext.isLogin);
   }
-
   render() {
     return (
       <div className="wrap">
@@ -46,6 +89,8 @@ export default class TaskDetails extends React.Component {
                   type="primary"
                   size="large"
                   onClick={() => {
+                    jenkinsContext.getUser(jenkinsContext.userId);
+                    jenkinsContext.getTaskList(jenkinsContext.userId);
                     this.setState({});
                   }}
                 >
@@ -72,13 +117,13 @@ export default class TaskDetails extends React.Component {
           {/* 信息栏 */}
           <div className="middle">
             <div className="jobName">
-              <Alert message="jobName" type="success" />
+              <Alert message={jenkinsContext.jobName} type="success" />
             </div>
             <div className="description">
-              <Alert message="description" type="success" />
+              <Alert message={jenkinsContext.description} type="success" />
             </div>
             <div className="isRunning">
-              <Alert message="isRunning" type="success" />
+              <Alert message={jenkinsContext.isRunning} type="success" />
             </div>
           </div>
           {/* 是否运行 */}
@@ -97,32 +142,12 @@ export default class TaskDetails extends React.Component {
         </div>
         <div className="body">
           <div className="body_left">
-            <Card title="Card Title">
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-              <Card.Grid style={gridStyle}>Content</Card.Grid>
-            </Card>
-          </div>
-          <div className="body_right ">
-            <Card title="Card Title">
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-              <Card.Grid style={gridStyle2}>Content</Card.Grid>
-            </Card>
+            <Table
+              columnWidth={"100"}
+              // columns={columns}
+              // dataSource={data}
+              id="showTable"
+            />
           </div>
         </div>
       </div>

@@ -15,7 +15,7 @@
   border: 1px solid red;
 }
 .middle {
-  width: 50%;
+  width: 60%;
   display: flex;
   justify-content: center;
   border: 1px solid red;
@@ -25,8 +25,15 @@
   width: 100%;
   justify-content: baseline;
 }
+.middle div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1em;
+  padding-left: 3vw;
+}
 .right {
-  width: 30%;
+  width: 20%;
   display: flex;
 }
 .right div {
@@ -49,4 +56,7 @@
 .body_right{
     padding-right: 20vw;
     padding-left: 50px;
+}
+#showTable{
+  width: 240%;
 }

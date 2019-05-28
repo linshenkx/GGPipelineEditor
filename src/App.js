@@ -149,6 +149,32 @@ class App extends React.Component {
               }}
               src="http://prr2i4muo.bkt.clouddn.com/git.svg"
             />
+            <Item
+              type="node"
+              size="72*72"
+              shape="flow-circle"
+              model={{
+                color: "blue",
+                label: "when",
+                myProps: {
+                  stepType: "when"
+                }
+              }}
+              src="http://prsv4ko2y.bkt.clouddn.com/when.svg"
+            />
+            <Item
+              type="node"
+              size="72*72"
+              shape="flow-circle"
+              model={{
+                color: "blue",
+                label: "post",
+                myProps: {
+                  stepType: "post"
+                }
+              }}
+              src="http://prsv4ko2y.bkt.clouddn.com/post.svg"
+            />
           </ItemPanel>
           <Flow
             data={data}
