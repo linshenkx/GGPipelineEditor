@@ -1,0 +1,19 @@
+#inputBranch,#inputEnvi,#inputExpree{
+  width: 65%;
+  position: relative;
+}
+#branchSwitch{
+  position: absolute;
+  right: 3vw;
+}
+#inputBtn{
+  position: absolute;
+  right: 1vw;
+}
+.branch,.expression{
+  padding-bottom: 2vh;
+
+}
+.environment{
+  padding-bottom: 10vh;
+}
