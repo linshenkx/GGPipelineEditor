@@ -6,9 +6,14 @@
   width: 67%;
   position: relative;
 }
-#inputEnvi{
-  width: 63%;
+#inputEnviKey{
+  width: 30%;
   position: relative;
+}
+#inputEnviKeyVal{
+  width: 5%;
+  position: absolute;
+  right: 6vw;
 }
 #branchSwitch{
   position: absolute;

@@ -46,7 +46,6 @@ const data = [
 ];
 
 class WhenStepEditor extends React.Component {
-    
   textChanged = (name, targetValue) => {
     const { propsAPI } = this.props;
     let item = propsAPI.getSelected()[0];
@@ -87,10 +86,22 @@ class WhenStepEditor extends React.Component {
     console.log(data);
     this.setState({});
   };
+  handleAddEnviron = value => {
+    console.log("Click!");
+    data.push({
+      type: "environment",
+      expression: this.state.inputEnviKey+":"+this.state.inputEnviKeyVal,
+      state: this.state.check.toString()
+    });
+    console.log(data);
+    this.setState({});
+  };
   state = {
     branch: "",
     check: true,
-    expression: ""
+    expression: "",
+    inputEnviKey:"",
+    inputEnviKeyVal:''
   };
   render() {
     const { propsAPI } = this.props;
@@ -193,8 +204,31 @@ class WhenStepEditor extends React.Component {
               }}
             />
           </div>
+          {/* 这里是环境变量的添加 */}
           <div className="environment">
-            <Input addonBefore="environment" defaultValue="" id="inputEnvi" />
+            <Input
+              addonBefore="environment"
+              defaultValue=""
+              id="inputEnviKey"
+              placeholder="key"
+              onChange={e => {
+                console.log("inputEnviKey:" + e.target.value);
+                this.setState({ inputEnviKey: e.target.value }, () => {
+                  console.log(this.state.inputEnviKey);
+                });
+              }}
+            />
+            <Input
+              defaultValue=""
+              id="inputEnviKeyVal"
+              placeholder="value"
+              onChange={e => {
+                console.log("inputEnviKeyVal:" + e.target.value);
+                this.setState({ inputEnviKeyVal: e.target.value }, () => {
+                  console.log(this.state.inputEnviKeyVal);
+                });
+              }}
+            />
             <Switch
               checkedChildren="是"
               unCheckedChildren="否"
@@ -208,6 +242,9 @@ class WhenStepEditor extends React.Component {
               shape="circle"
               icon="plus"
               id="inputBtn"
+              onClick={() => {
+                this.handleAddEnviron();
+              }}
             />
           </div>
           <Table columns={columns} dataSource={data} size="small" />
