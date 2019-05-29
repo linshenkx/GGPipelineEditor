@@ -34,7 +34,8 @@ class App extends React.Component {
           id: "00000",
           index: 0,
           myProps: {
-            stepType: "first",
+              type: "function",
+              stepType: "first",
             stageType: "first",
             stageId: 9999
           }
@@ -192,6 +193,7 @@ class App extends React.Component {
             data={data}
             graph={graph}
             grid={grid}
+            noEndEdge={false}
             onAfterItemSelected={e => {
               if (e.item.type === "node") {
                 console.log("你点中了节点");
