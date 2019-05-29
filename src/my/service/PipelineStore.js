@@ -1,6 +1,7 @@
 // @flow
 
 import idgen from './IdGenerator';
+import type {PipelineNamedValueDescriptor, PipelineValueDescriptor} from "./PipelineSyntaxConverter";
 // import type { PipelineKeyValuePair } from './PipelineSyntaxConverter';
 // import { DragPosition } from '../components/editor/DragPosition';
 
@@ -19,6 +20,18 @@ export type StageInfo = {
     // eslint-disable-next-line no-use-before-define
     agent: StepInfo,
     post: PostInfo[],
+    when: WhenInfo[],
+};
+
+export type WhenInfo={
+    name: string,
+    children?: WhenInfo[],
+    arguments?: string | KeyValueInfo[],
+};
+
+export type KeyValueInfo={
+    key:string,
+    value:string,
 };
 
 export type PostInfo={
@@ -317,6 +330,19 @@ class PipelineStore {
         this.notify();
     }
 
+    addOldWhen(selectedStage: StageInfo,when:WhenInfo):WhenInfo{
+        if (!selectedStage) {
+            throw new Error('Must provide a stage to add steps');
+        }
+        let newWhensForStage = selectedStage.when || [];
+
+        newWhensForStage=[...newWhensForStage,when];
+
+        selectedStage.when=newWhensForStage;
+        this.notify();
+        return when;
+    }
+
     addOldPost(selectedStage: StageInfo, post: any):PostInfo{
         if (!selectedStage) {
             throw new Error('Must provide a stage to add steps');
@@ -438,55 +464,6 @@ class PipelineStore {
         }
         this.notify();
     }
-
-    // /**
-    //  * Moves a step to a different location in the same stage.
-    //  * Does not support movement across stages.
-    //  *
-    //  * @param stage
-    //  * @param sourceNodeId 'id' value of step to move
-    //  * @param targetNodeId 'id' value of target
-    //  * @param targetType BEFORE_ITEM, AFTER_ITEM, FIRST_CHILD, LAST_CHILD
-    //  */
-    // moveStep(stage, sourceNodeId, targetNodeId, targetType) {
-    //     if (sourceNodeId === targetNodeId) {
-    //         return;
-    //     }
-    //
-    //     const sourceStep = findStepById(stage.steps, sourceNodeId);
-    //     const targetStep = findStepById(stage.steps, targetNodeId);
-    //
-    //     // remove the step from wherever it was before
-    //     const sourceParentStep = this.findParentStep(sourceStep);
-    //     const sourceArray = sourceParentStep ? sourceParentStep.children : stage.steps;
-    //     sourceArray.splice(sourceArray.indexOf(sourceStep), 1);
-    //
-    //     // insert the step in the right spot based on where they dragged
-    //     if (targetType === DragPosition.FIRST_CHILD || targetType === DragPosition.LAST_CHILD) {
-    //         // if the targetNodeId didn't resolve to a targetStep, then use stage as the target
-    //         const targetArray = targetStep ? targetStep.children : stage.steps;
-    //         if (targetType === DragPosition.FIRST_CHILD) {
-    //             targetArray.splice(0, 0, sourceStep);
-    //         } else {
-    //             targetArray.push(sourceStep);
-    //         }
-    //     } else if (targetType === DragPosition.BEFORE_ITEM || targetType === DragPosition.AFTER_ITEM) {
-    //         const targetParentStep = this.findParentStep(targetStep);
-    //         // if the target step has no parent step, it's at the stage level
-    //         const targetArray = !targetParentStep ? stage.steps : targetParentStep.children;
-    //         let targetIndex = targetArray.indexOf(targetStep);
-    //
-    //         if (targetType === DragPosition.BEFORE_ITEM) {
-    //             targetArray.splice(targetIndex, 0, sourceStep);
-    //         } else {
-    //             targetArray.splice(targetIndex + 1, 0, sourceStep);
-    //         }
-    //     } else {
-    //         console.warn(`targetType=${targetType} not implemented`);
-    //     }
-    //
-    //     this.notify();
-    // }
 
     setPipeline(pipeline: PipelineInfo) {
         this.pipeline = pipeline;

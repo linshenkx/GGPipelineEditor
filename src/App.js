@@ -18,6 +18,7 @@ import pipelineStore from "./my/service/PipelineStore";
 import jenkinsContext from "./my/util/JenkinsContext";
 import { convertInternalModelToJson } from "./my/service/PipelineSyntaxConverter";
 import NodeEditor from "./my/editor/NodeEditor";
+import type {KeyValueInfo, WhenInfo} from "./my/service/PipelineStore";
 
 class App extends React.Component {
   render() {
@@ -66,11 +67,37 @@ class App extends React.Component {
                 isContainer: false,
                 data: {}
               };
+              let when:WhenInfo={
+                  name: "allOf",
+                  children: [
+                      {
+                          name: "environment",
+                          arguments:  [
+                              {
+                                  key:"name",
+                                  value:"DEPLOY_TO",
+                              },
+                              {
+                                  key:"value",
+                                  value:"production",
+                              }
+                          ],
+                      },
+                      {
+                          name: "branch",
+                          arguments: "production",
+                      },
+                  ],
+              };
+              let stageInfo = pipelineStore.createAnyStage("stage1");
+                pipelineStore.addOldWhen(stageInfo,when);
+
               pipelineStore.addOldStepToPost(post, step);
               pipelineStore.addOldPost(anyStage, post);
               pipelineStore.setPipeline(anyStage);
+                pipelineStore.addSequentialStage(stageInfo);
 
-              console.log(
+                console.log(
                 "convertInternalModelToJson:" +
                   JSON.stringify(
                     convertInternalModelToJson(pipelineStore.pipeline)

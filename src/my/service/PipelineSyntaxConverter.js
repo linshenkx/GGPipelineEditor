@@ -2,7 +2,7 @@
 
 import fetch from './fetchClassic';
 import { UnknownSection } from './PipelineStore';
-import type { PipelineInfo, StageInfo, StepInfo } from './PipelineStore';
+import type {PipelineInfo, StageInfo, StepInfo, WhenInfo} from './PipelineStore';
 import pipelineMetadataService from './PipelineMetadataService';
 import idgen from './IdGenerator';
 
@@ -47,6 +47,12 @@ export type PipelinePost={
     branches?: PipelineStage[],
 }
 
+export type PipelineWhen={
+    name: string,
+    arguments?: PipelineValueDescriptor | PipelineNamedValueDescriptor[],
+    children?: PipelineWhen[],
+};
+
 export type PipelineStage = {
     name: string,
     branches?: PipelineStage[],
@@ -54,6 +60,7 @@ export type PipelineStage = {
     steps?: PipelineStep[],
     environment?: PipelineNamedValueDescriptor[],
     post?:PipelinePost[],
+    when?:{"conditions":PipelineWhen[]},
 };
 
 // eslint-disable-next-line no-unused-vars
@@ -326,9 +333,54 @@ export function convertStageToJson(stage: StageInfo): PipelineStage {
         out.post={"conditions":convertPostsToJson(stage.post)};
     }
 
+    if(stage.when && stage.when.length ){
+        out.when={"conditions":convertWhensToJson(stage.when)};
+    }
+
     return out;
 }
 
+export function convertWhensToJson(whens: WhenInfo[]):PipelineWhen[] {
+    const out: PipelineWhen[] = [];
+    for (const when of whens) {
+        out.push(convertWhenToJson(when));
+    }
+    return out;
+}
+
+export function convertWhenToJson(when: WhenInfo): PipelineWhen {
+    const out: PipelineWhen = {
+        name: when.name,
+    };
+    let args=when.arguments;
+    if(args){
+        if(typeof (args) === "string"){
+            out.arguments={
+                isLiteral: true,
+                value: args,
+            }
+        }else {
+            out.arguments=[];
+            for(let arg of args){
+                out.arguments.push({
+                    key: arg.key,
+                    value: {
+                        isLiteral: true,
+                        value: arg.value,
+                    },
+                });
+            }
+        }
+    }
+    let children=when.children;
+    if(children){
+        out.children=[];
+        for(let child of children){
+            out.children.push(convertWhenToJson(child));
+        }
+    }
+    return out;
+}
 export function convertInternalModelToJson(pipeline: PipelineInfo): PipelineJsonContainer {
     const out: PipelineJsonContainer = {
         pipeline: {
