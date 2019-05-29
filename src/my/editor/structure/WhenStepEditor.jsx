@@ -12,40 +12,41 @@ import { stepUtil } from "../../util/StepUtil";
 const { TextArea } = Input;
 const columns = [
   {
-    title: "Name",
-    dataIndex: "name"
+    title: "Type",
+    dataIndex: "type"
   },
   {
-    title: "Age",
-    dataIndex: "age"
+    title: "Expression",
+    dataIndex: "expression"
   },
   {
-    title: "Address",
-    dataIndex: "address"
+    title: "True/False",
+    dataIndex: "state"
   }
 ];
 const data = [
-  {
-    key: "1",
-    name: "branch",
-    age: 'master',
-    address: "是"
-  },
-  {
-    key: "2",
-    name: "environment",
-    age: 'AA:aa',
-    address: "是"
-  },
-  {
-    key: "3",
-    name: "expression",
-    age: 'return aa',
-    address: "否"
-  }
+  //   {
+  //     key: "1",
+  //     type: "branch",
+  //     expression: "master",
+  //     state: "是"
+  //   },
+  //   {
+  //     key: "2",
+  //     type: "environment",
+  //     expression: "AA:aa",
+  //     state: "是"
+  //   },
+  //   {
+  //     key: "3",
+  //     type: "expression",
+  //     expression: "return aa",
+  //     state: "否"
+  //   }
 ];
 
 class WhenStepEditor extends React.Component {
+    
   textChanged = (name, targetValue) => {
     const { propsAPI } = this.props;
     let item = propsAPI.getSelected()[0];
@@ -66,7 +67,31 @@ class WhenStepEditor extends React.Component {
       this.props.onChange(step);
     }
   };
-
+  handleAddBranch = value => {
+    console.log("Click!");
+    data.push({
+      type: "branch",
+      expression: this.state.branch,
+      state: this.state.check.toString()
+    });
+    console.log(data);
+    this.setState({});
+  };
+  handleAddExpre = value => {
+    console.log("Click!");
+    data.push({
+      type: "expression",
+      expression: this.state.expression,
+      state: this.state.check.toString()
+    });
+    console.log(data);
+    this.setState({});
+  };
+  state = {
+    branch: "",
+    check: true,
+    expression: ""
+  };
   render() {
     const { propsAPI } = this.props;
     let item = propsAPI.getSelected()[0];
@@ -89,12 +114,33 @@ class WhenStepEditor extends React.Component {
             <Radio value={2}>anyOf</Radio>
           </Radio.Group>
           <div className="branch">
-            <Input addonBefore="branch" defaultValue="" id="inputBranch" />
+            <Input
+              addonBefore="branch"
+              defaultValue=""
+              id="inputBranch"
+              onChange={e => {
+                console.log("branch：" + e.target.value);
+                this.setState({ branch: e.target.value }, () => {
+                  console.log(this.state.branch);
+                });
+              }}
+            />
             <Switch
               checkedChildren="是"
               unCheckedChildren="否"
               id="branchSwitch"
               defaultChecked
+              onChange={e => {
+                console.log("你当前选中的项：" + e);
+                this.setState(
+                  {
+                    check: e
+                  },
+                  () => {
+                    console.log("state里面的项：" + this.state.check);
+                  }
+                );
+              }}
             />
             <Button
               type="primary"
@@ -102,15 +148,39 @@ class WhenStepEditor extends React.Component {
               shape="circle"
               icon="plus"
               id="inputBtn"
+              onClick={() => {
+                this.handleAddBranch();
+              }}
             />
           </div>
           <div className="expression">
-            <Input addonBefore="expression" defaultValue="" id="inputExpree" />
+            <Input
+              addonBefore="expression"
+              defaultValue=""
+              id="inputExpree"
+              onChange={e => {
+                console.log("expression:" + e.target.value);
+                this.setState({ expression: e.target.value }, () => {
+                  console.log(this.state.expression);
+                });
+              }}
+            />
             <Switch
               checkedChildren="是"
               unCheckedChildren="否"
               id="branchSwitch"
               defaultChecked
+              onChange={e => {
+                console.log("你当前选中的项：" + e);
+                this.setState(
+                  {
+                    check: e
+                  },
+                  () => {
+                    console.log("state里面的项：" + this.state.check);
+                  }
+                );
+              }}
             />
             <Button
               type="primary"
@@ -118,6 +188,9 @@ class WhenStepEditor extends React.Component {
               shape="circle"
               icon="plus"
               id="inputBtn"
+              onClick={() => {
+                this.handleAddExpre();
+              }}
             />
           </div>
           <div className="environment">
@@ -127,6 +200,7 @@ class WhenStepEditor extends React.Component {
               unCheckedChildren="否"
               id="branchSwitch"
               defaultChecked
+              onChange={e => {}}
             />
             <Button
               type="primary"

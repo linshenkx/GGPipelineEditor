@@ -1,5 +1,13 @@
-#inputBranch,#inputEnvi,#inputExpree{
+#inputExpree{
   width: 65%;
+  position: relative;
+}
+#inputBranch{
+  width: 67%;
+  position: relative;
+}
+#inputEnvi{
+  width: 63%;
   position: relative;
 }
 #branchSwitch{
