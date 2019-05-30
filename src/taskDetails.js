@@ -3,7 +3,10 @@ import { Input, Button, Alert, Table, Divider, Tag } from "antd";
 import jenkinsContext from "./my/util/JenkinsContext";
 import "./taskDetails.css";
 
-// const data = [
+
+
+export default class TaskDetails extends React.Component {
+//   const data = [
 //   {
 //     key: "1",
 //     result: this.state.result,
@@ -45,8 +48,6 @@ import "./taskDetails.css";
 //     dataIndex: "timestamp"
 //   }
 // ];
-
-export default class TaskDetails extends React.Component {
   state={
     state:jenkinsContext.result,
     ID:jenkinsContext.id,

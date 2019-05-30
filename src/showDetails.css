@@ -1,0 +1,19 @@
+.showWraper{
+  position: relative;
+}
+#searchWrap{
+  position: absolute;
+  top: 2vh;
+  left: 15vw;
+}
+#newTask{
+  position: absolute;
+  left: 30vw;
+  top: 2vh;
+}
+#detailsBody{
+  width: 90%;
+  padding-top: 15vh;
+  text-align: center;
+  margin: 0 auto;
+}
