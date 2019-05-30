@@ -11,7 +11,7 @@ class PostStepEditor extends React.Component {
     const { propsAPI } = this.props;
     let item = propsAPI.getSelected()[0];
     let {model} = item;
-    model.post.condition=value;
+    model.myProps.post.condition=value;
     propsAPI.update(item, model);
   };
   render() {
@@ -23,7 +23,7 @@ class PostStepEditor extends React.Component {
       post={
         "condition":"always",
       };
-      model.post=post;
+      model.myProps.post=post;
       propsAPI.update(item, model);
     }
     let condition=post.condition;

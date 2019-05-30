@@ -40,14 +40,7 @@ class StepUtil {
     model.myProps.stageType = stageType;
     return model;
   };
-  setEdgeType = (model, text) => {
-    model.label = text;
-    model.labelRectStyle = {
-      opacity: 0.1,
-      fill: "red"
-    };
-    return model;
-  };
+
   getStageIdFromModel = model => {
     let { myProps } = model;
     if (myProps && myProps.stageId) {
