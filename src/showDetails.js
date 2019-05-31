@@ -1,5 +1,5 @@
 import React from "react";
-import { Input, Button, Alert, Table ,Icon} from "antd";
+import { Input, Button, Alert, Table, Icon } from "antd";
 import jenkinsContext from "./my/util/JenkinsContext";
 import "./showDetails.css";
 const Search = Input.Search;
@@ -10,26 +10,32 @@ const columns = [
     render: text => <a href="javascript:;">{text}</a>
   },
   {
-      title:"Editable",
-      dataIndex:"editable"
+    title: "Editable",
+    dataIndex: "editable"
   }
 ];
 const data = [
   {
     key: "1",
     name: "John Brown",
-    editable:<Icon type="edit" />
+    editable: (
+      <Icon
+        type="edit"
+        onClick={() => {
+          console.log("click");
+        }}
+      />
+    )
   },
   {
     key: "2",
     name: "Jim Green",
-    editable:" "
+    editable: " "
   },
   {
     key: "3",
     name: "Joe Black",
-    editable:<Icon type="edit" />
-
+    editable: <Icon type="edit" />
   }
 ];
 export default class ShowDetails extends React.Component {
@@ -98,7 +104,7 @@ export default class ShowDetails extends React.Component {
           />
         </div>
         <Button type="primary" size="large" id="newTask">
-          新建任务
+          <a href="#/">新建任务</a>
         </Button>
         <div id="detailsBody">
           <Table

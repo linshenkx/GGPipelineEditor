@@ -165,7 +165,7 @@ class topBar extends React.Component {
         jenkinsContext.duration = data.data.buildModels[0].duration;
         jenkinsContext.timestamp = data.data.buildModels[0].timestamp;
         console.log(jenkinsContext.state+","+jenkinsContext.id);
-        
+        this.setState({})
       });
   };
   render() {
