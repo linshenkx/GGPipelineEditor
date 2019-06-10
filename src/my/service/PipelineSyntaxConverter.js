@@ -44,7 +44,7 @@ export type PipelineStep = {
 
 export type PipelinePost={
     condition: string,
-    branches?: PipelineStage[],
+    branch?: PipelineStage,
 }
 
 export type PipelineWhen={
@@ -418,7 +418,9 @@ export function convertPostsToJson(posts: PostInfo[]): PipelinePost[] {
             name: 'default',
             steps: convertStepsToJson(post.steps),
         };
-        s.branches = [outBranch];
+
+        s.branch = outBranch;
+
         out.push(s);
     }
     return out;

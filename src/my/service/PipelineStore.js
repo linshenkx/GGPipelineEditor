@@ -202,7 +202,6 @@ class PipelineStore {
     pipeline: StageInfo;
     listeners: Function[] = [];
     currentStage:StageInfo;
-    currentStageType:string;
 
     createAnyStage(name: string): StageInfo {
         return {
@@ -216,58 +215,33 @@ class PipelineStore {
             steps: [],
         };
     }
+    createEmptyParallelStage(name: string): StageInfo {
+        return {
+            name,
+            id: idgen.next(),
+            children: [],
+            steps: [],
+        };
+    }
     addSequentialStage(stage: StageInfo) {
         const { pipeline } = this;
         pipeline.children = [...pipeline.children, stage];
         this.currentStage=stage;
-        this.currentStageType="sequential";
         this.notify();
         return stage;
     }
 
-    addParallelStage(newStage: StageInfo) {
-        if(this.currentStageType!=="parallel"){
-            this.currentStageType="parallel";
-            let parentStage=this.createAnyStage(newStage.name);
-            parentStage.children=[];
-            this.currentStage=parentStage;
-            const { pipeline } = this;
-            pipeline.children = [...pipeline.children, parentStage];
-        }
+    addParallelStage(stage: StageInfo) {
 
-        this.currentStage.children.push(newStage);
-
-        this.notify();
-        return newStage;
-    }
-
-    createSequentialStage(name: string) {
         const { pipeline } = this;
-
-        let newStage = createStage(name);
-        // eslint-disable-next-line no-unused-vars
-        const stageId = newStage.id;
-
-        pipeline.children = [...pipeline.children, newStage];
+        pipeline.children = [...pipeline.children, stage];
+        this.currentStage=stage;
         this.notify();
-        return newStage;
+        return stage;
     }
 
-    createParallelStage(name: string, parentStage: StageInfo) {
+    addStageToParallelStage(newStage: StageInfo, parentStage: StageInfo) {
         let updatedChildren = [...parentStage.children]; // Start with a shallow copy, we'll add one or two to this
-
-        let newStage = createStage(name);
-
-        if (parentStage.children.length === 0) {
-            // Converting a normal stage with steps into a container of parallel branches, so there's more to do
-            let zerothStage = createStage(parentStage.name);
-
-            // Move all properties steps from the parent stage into the new zeroth stage
-            moveStageProperties(parentStage, zerothStage);
-            parentStage.steps = []; // Stages with children can't have steps
-
-            updatedChildren.push(zerothStage);
-        }
 
         updatedChildren.push(newStage); // Add the user's newStage to the parent's child list
 
@@ -280,75 +254,6 @@ class PipelineStore {
         return findParentStage(this.pipeline, stage);
     }
 
-    findStageByStep(step: StepInfo): ?StageInfo {
-        const stage = findStageByStep(this.pipeline, step);
-        return stage;
-    }
-
-    findParentStep(childStep: StepInfo): ?StepInfo {
-        const stage = findStageByStep(this.pipeline, childStep);
-        if (!stage) {
-            throw new Error('Stage not found');
-        }
-        const parent = findParentStepByChild(stage.steps, childStep);
-        return parent;
-    }
-
-    /**
-     * Return an array that starts at the specified step and includes all ancestor steps.
-     * @param childStep
-     * @param steps
-     * @returns {[]}
-     */
-    findStepHierarchy(childStep: StepInfo, steps) {
-        const ancestors = [childStep];
-
-        let nextStep = childStep;
-
-        while (nextStep) {
-            nextStep = findParentStepByChild(steps, nextStep);
-
-            if (nextStep) {
-                ancestors.push(nextStep);
-            }
-        }
-
-        return ancestors;
-    }
-
-    /**
-     * Delete the selected stage from our stages list. When this leaves a single-branch of parallel jobs, the steps
-     * will be moved to the parent stage, and the lone parallel branch will be deleted.
-     *
-     * Assumptions:
-     *      * The Graph is valid, and contains selectedStage
-     *      * Only top-level stages can have children (ie, graph is max depth of 2).
-     */
-    deleteStage(stage: StageInfo) {
-        const parentStage = this.findParentStage(stage) || this.pipeline;
-
-        // For simplicity we'll just copy the stages list and then mutate it
-        // eslint-disable-next-line no-unused-vars
-        let newStages = [...parentStage.children];
-
-        // First, remove selected stage from parent list
-        let newChildren = [...parentStage.children];
-        let idx = newChildren.indexOf(stage);
-        newChildren.splice(idx, 1);
-
-        // see if this is a nested stage and we need to move a parallel to a single top-level
-        if (parentStage !== this.pipeline && newChildren.length === 1) {
-            let onlyChild = newChildren[0];
-            newChildren = [];
-            moveStageProperties(onlyChild, parentStage);
-            parentStage.name = onlyChild.name;
-        }
-
-        // Update the parent with new children list
-        parentStage.children = newChildren;
-
-        this.notify();
-    }
 
     addOldWhen(selectedStage: StageInfo,when:WhenInfo):WhenInfo{
         if (!selectedStage) {
@@ -449,40 +354,6 @@ class PipelineStore {
         selectedStage.steps = newStepsForStage;
         this.notify();
         return newStep;
-    }
-
-    deleteStep(step: StepInfo) {
-        const selectedStage = findStageByStep(this.pipeline, step);
-        const oldStepsForStage = selectedStage.steps || [];
-        let newStepsForStage = oldStepsForStage;
-        // eslint-disable-next-line no-unused-vars
-        let newSelectedStep;
-
-        const parent = findParentStepByChild(selectedStage.steps, step);
-        if (parent) {
-            const stepIdx = parent.children.indexOf(step);
-
-            if (stepIdx < 0) {
-                return;
-            }
-
-            parent.children = [...parent.children.slice(0, stepIdx), ...parent.children.slice(stepIdx + 1)];
-
-            newSelectedStep = parent;
-        } else {
-            // no parent
-            const stepIdx = oldStepsForStage.indexOf(step);
-
-            if (stepIdx < 0) {
-                return;
-            }
-
-            selectedStage.steps = [...oldStepsForStage.slice(0, stepIdx), ...oldStepsForStage.slice(stepIdx + 1)];
-
-            let newSelectedStepIdx = Math.min(stepIdx, newStepsForStage.length - 1);
-            newSelectedStep = newStepsForStage[newSelectedStepIdx];
-        }
-        this.notify();
     }
 
     setPipeline(pipeline: PipelineInfo) {

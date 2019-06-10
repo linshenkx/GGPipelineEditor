@@ -21,14 +21,18 @@ class JenkinsContext {
   duration;
   timestamp;
   result;
+
+  init(){
+    let contextStage = pipelineStore.createAnyStage("contextStage");
+    contextStage.id = 9999;
+    this.currentStageId = contextStage.id;
+    this.stageMap[contextStage.id] = contextStage;
+  };
+
 }
 
 const jenkinsContext = new JenkinsContext();
 
-let contextStage = pipelineStore.createAnyStage("contextStage");
-contextStage.id = 9999;
-// jenkinsContext.stageMap.set(contextStage.id,contextStage);
-jenkinsContext.currentStageId = contextStage.id;
-jenkinsContext.stageMap[contextStage.id] = contextStage;
+jenkinsContext.init();
 
 export default jenkinsContext;

@@ -6,8 +6,7 @@ import "../editor/function/StepEditor.css";
 import jenkinsContext from "../util/JenkinsContext";
 import pipelineStore from "../service/PipelineStore";
 import { convertInternalModelToJson } from "../service/PipelineSyntaxConverter";
-import store from '../store.js';
-import type {WhenInfo} from "../service/PipelineStore";
+import idgen from "../service/IdGenerator";
 
 
 class SaveButton extends React.Component {
@@ -48,9 +47,10 @@ class SaveButton extends React.Component {
         let nextNodes = this.getNextNodes(currentNode,data);
 
         if(!nextNodes.length){
-            return post;
+            console.log("post后面不能为空！");
+            return ;
         }
-        if(nextNodes!==1){
+        if(nextNodes.length!==1){
             console.log("post只能单一链式调用！");
             return ;
         }
@@ -74,10 +74,8 @@ class SaveButton extends React.Component {
         }
     };
     getStageAndNextNodeIdFromNodeId=(nodeId,data)=> {
-        console.log("getStageAndNextNodeIdFromNodeId:",nodeId);
 
         let currentNode=this.getNodeById(nodeId,data);
-        console.log("getStageAndNextNodeIdFromNodeId currentNode:"+JSON.stringify(currentNode));
 
         let stepType=currentNode.myProps.stepType;
 
@@ -111,7 +109,6 @@ class SaveButton extends React.Component {
 
         //处理leader后面的post
         let nextNodes= this.getNextNodes(currentNode,data);
-        console.log("getStageAndNextNodeIdFromNodeId nextNodes:"+JSON.stringify(nextNodes));
 
         let postNodes= nextNodes.filter(node=>{
             return node.myProps.stepType==="post";
@@ -128,7 +125,6 @@ class SaveButton extends React.Component {
         let nextNodesWithoutPost= nextNodes.filter(node=>{
             return  node.myProps.stepType!=="post";
         });
-        console.log("getStageAndNextNodeIdFromNodeId nextNodesWithoutPost:"+JSON.stringify(nextNodesWithoutPost));
 
         if(nextNodesWithoutPost.length>1){
             console.log("stage只能单一链式调用！");
@@ -143,7 +139,6 @@ class SaveButton extends React.Component {
                 nextNodeId:undefined,
             };
         }
-        console.log("getStageAndNextNodeIdFromNodeId nextNode:"+JSON.stringify(nextNode));
 
         if(nextNode.myProps.stageType !== "follower"){
             return {
@@ -156,8 +151,6 @@ class SaveButton extends React.Component {
 
         //处理后面单一follower链
         while (currentNode) {
-            console.log("getStageAndNextNodeIdFromNodeId addOldStep:"+JSON.stringify(currentNode));
-
             pipelineStore.addOldStep(currentStage, null, currentNode.myProps.step);
 
             nextNodes=this.getNextNodes(currentNode,data);
@@ -208,26 +201,41 @@ class SaveButton extends React.Component {
 
       let contextStage = jenkinsContext.stageMap[9999];
 
-      pipelineStore.setPipeline(JSON.parse(JSON.stringify(contextStage)));
 
+      //处理leader后面的post
+      let nextNodes= this.getNextNodes(contextNode,data);
+
+      let postNodes= nextNodes.filter(node=>{
+          return node.myProps.stepType==="post";
+      });
+
+      for(let postNode of postNodes){
+          let post=this.getPostFromNodeId(postNode.id,data);
+          pipelineStore.addOldPost(contextStage,post);
+      }
+
+
+      let nextNodesWithoutPost= nextNodes.filter(node=>{
+          return  node.myProps.stepType!=="post";
+      });
+
+      if(nextNodesWithoutPost.length>1){
+          console.log("stage只能单一链式调用！");
+          return;
+      }
+
+      pipelineStore.setPipeline(JSON.parse(JSON.stringify(contextStage)));
       console.log(
           "pipelineStore.pipeline:" + JSON.stringify(pipelineStore.pipeline)
       );
 
-      let currentEdges = this.getToEdges(contextNode,data);
+      let nextNodeId=nextNodesWithoutPost[0].id;
 
-      let nextNodeId;
-
-      while (currentEdges.length || nextNodeId) {
+      while ( nextNodeId) {
           let targetId;
-          if(currentEdges.length){
-              let currentEdge = currentEdges.pop();
-              console.log("currentEdge:" + JSON.stringify(currentEdge));
-              targetId= currentEdge.target;
-          }else {
-              targetId=nextNodeId;
-              nextNodeId=undefined;
-          }
+
+          targetId=nextNodeId;
+          nextNodeId=undefined;
 
           let currentNode = this.getNodeById(targetId,data);
 
@@ -236,35 +244,46 @@ class SaveButton extends React.Component {
 
           switch (type) {
               case "structure":
-                  if (stepType === "parallel") {
-                      console.log("开始处理平行stage！");
-                      let toEdges = this.getToEdges(currentNode,data);
-                      if(toEdges.length<1){
-                          console.log("parallel 的导出边条数为："+toEdges.length+",不符合要求！");
-                      }
-                      for (let toEdge of toEdges) {
-
-                          //构造stage
-                          let stageAndNextNodeId= this.getStageAndNextNodeIdFromNodeId(toEdge.target,data);
-                          console.log("stageAndNextNodeId:"+JSON.stringify(stageAndNextNodeId));
-                          let toEdgeStage=stageAndNextNodeId.stage;
-                          let toEdgeNextNodeId=stageAndNextNodeId.nextNodeId;
-                          if(nextNodeId){
-                              if(nextNodeId!==toEdgeNextNodeId){
-                                  console.log("stage没有回归到同一节点！");
-                                  return;
-                              }
-                          }else {
-                              nextNodeId=toEdgeNextNodeId;
+                  switch (stepType) {
+                      case "parallel":
+                          console.log("开始处理平行stage！");
+                          let toEdges = this.getToEdges(currentNode,data);
+                          if(toEdges.length<1){
+                              console.log("parallel 的导出边条数为："+toEdges.length+",不符合要求！");
                           }
 
-                          pipelineStore.addParallelStage(toEdgeStage);
-                      }
-                  } else {
-                      console.log("节点类型："+stepType+" 位置有误！");
-                      return;
+                          let parallelStage=pipelineStore.createEmptyParallelStage("parallelStage"+idgen.next());
+
+                          for (let toEdge of toEdges) {
+
+                              //构造stage
+                              let stageAndNextNodeId= this.getStageAndNextNodeIdFromNodeId(toEdge.target,data);
+                              console.log("stageAndNextNodeId:"+JSON.stringify(stageAndNextNodeId));
+                              let toEdgeStage=stageAndNextNodeId.stage;
+                              let toEdgeNextNodeId=stageAndNextNodeId.nextNodeId;
+                              if(nextNodeId){
+                                  if(nextNodeId!==toEdgeNextNodeId){
+                                      console.log("stage没有回归到同一节点！");
+                                      return;
+                                  }
+                              }else {
+                                  nextNodeId=toEdgeNextNodeId;
+                              }
+
+                              pipelineStore.addStageToParallelStage(toEdgeStage,parallelStage);
+                          }
+                          pipelineStore.addParallelStage(parallelStage);
+                          break;
+                      case "when":
+                          let stageAndNextNodeId= this.getStageAndNextNodeIdFromNodeId(targetId,data);
+                          pipelineStore.addSequentialStage(stageAndNextNodeId.stage);
+                          nextNodeId=stageAndNextNodeId.nextNodeId;
+                          break;
+                      default:
+                          console.log("节点类型："+stepType+" 位置有误！");
+                          return;
                   }
-                  break;
+
               case "function":
                   let stageType=currentNode.myProps.stageType;
                   if (stageType === "leader") {
