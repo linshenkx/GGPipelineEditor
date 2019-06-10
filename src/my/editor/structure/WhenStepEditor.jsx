@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { getArg, setArg } from "../../service/ArgService";
 import { withPropsAPI } from "gg-editor";
 import "../function/steps/ShellScriptStepEditor.css";
 import "antd/dist/antd.css";
@@ -9,7 +8,6 @@ import {Input, Radio, Switch, Button, Table, Popconfirm} from "antd";
 
 import type {WhenInfo} from "../../service/PipelineStore";
 import idgen from "../../service/IdGenerator";
-import {stageUtil} from "../../util/StageUtil";
 
 
 

@@ -11,14 +11,13 @@ import GGEditor, {
   EdgePanel
 } from "gg-editor";
 import "antd/dist/antd.css";
-import StepEditor from "./my/editor/function/StepEditor";
 import EdgeEditor from "./my/editor/EdgeEditor";
 import TopBar from "./my/component/topBar";
 import pipelineStore from "./my/service/PipelineStore";
-import jenkinsContext from "./my/util/JenkinsContext";
 import { convertInternalModelToJson } from "./my/service/PipelineSyntaxConverter";
 import NodeEditor from "./my/editor/NodeEditor";
-import type {KeyValueInfo, WhenInfo} from "./my/service/PipelineStore";
+import type { WhenInfo} from "./my/service/PipelineStore";
+import SaveButton from "./my/component/SaveButton";
 
 class App extends React.Component {
   render() {
@@ -144,6 +143,20 @@ class App extends React.Component {
           </Toolbar>
           <ItemPanel className="ItemPanel">
             结构节点
+              <Item
+                  type="node"
+                  size="72*72"
+                  shape="flow-circle"
+                  model={{
+                      color: "blue",
+                      label: "parallel",
+                      myProps: {
+                          type: "structure",
+                          stepType: "parallel"
+                      }
+                  }}
+                  src="http://prr2i4muo.bkt.clouddn.com/image/gg-editor/parallel.svg"
+              />
             <Item
               type="node"
               size="72*72"
@@ -216,7 +229,9 @@ class App extends React.Component {
               src="http://prr2i4muo.bkt.clouddn.com/git.svg"
             />
           </ItemPanel>
-          <Flow
+            <SaveButton enable={true}/>
+
+            <Flow
             data={data}
             graph={graph}
             grid={grid}

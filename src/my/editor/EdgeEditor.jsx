@@ -1,5 +1,4 @@
 import * as React from "react";
-import { stepUtil } from "../util/StepUtil";
 import { withPropsAPI } from "gg-editor";
 
 import "./EdgeEditor.css";
@@ -16,7 +15,9 @@ class EdgeEditor extends React.Component {
     const { propsAPI } = this.props;
     let item = propsAPI.getSelected()[0];
     let { model } = item;
-    model.label = this.state.isTrue;
+    if(model.myProps.whenEdge){
+      model.label=model.myProps.whenEdge;
+    }
     model.labelCfg= {
       refY: -20,
       refX: 0,
@@ -25,6 +26,7 @@ class EdgeEditor extends React.Component {
         fill: 'red'
       }
     };
+    model.myProps.whenEdge=this.state.isTrue;
     propsAPI.update(item, model);
     console.log(model);
     return (

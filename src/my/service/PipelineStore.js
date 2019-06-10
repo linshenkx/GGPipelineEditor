@@ -201,6 +201,8 @@ const moveStageProperties = function(fromStage, toStage) {
 class PipelineStore {
     pipeline: StageInfo;
     listeners: Function[] = [];
+    currentStage:StageInfo;
+    currentStageType:string;
 
     createAnyStage(name: string): StageInfo {
         return {
@@ -217,8 +219,26 @@ class PipelineStore {
     addSequentialStage(stage: StageInfo) {
         const { pipeline } = this;
         pipeline.children = [...pipeline.children, stage];
+        this.currentStage=stage;
+        this.currentStageType="sequential";
         this.notify();
         return stage;
+    }
+
+    addParallelStage(newStage: StageInfo) {
+        if(this.currentStageType!=="parallel"){
+            this.currentStageType="parallel";
+            let parentStage=this.createAnyStage(newStage.name);
+            parentStage.children=[];
+            this.currentStage=parentStage;
+            const { pipeline } = this;
+            pipeline.children = [...pipeline.children, parentStage];
+        }
+
+        this.currentStage.children.push(newStage);
+
+        this.notify();
+        return newStage;
     }
 
     createSequentialStage(name: string) {
