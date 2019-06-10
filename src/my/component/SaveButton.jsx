@@ -186,7 +186,7 @@ class SaveButton extends React.Component {
 
   resolveData = data => {
       console.log("保存:" + JSON.stringify(data));
-
+      jenkinsContext.init();
       //获取起始节点的stage,完成全局初始化
       let nodeList = data.nodes;
       let edgeList = data.edges;
@@ -283,7 +283,7 @@ class SaveButton extends React.Component {
                           console.log("节点类型："+stepType+" 位置有误！");
                           return;
                   }
-
+                  break;
               case "function":
                   let stageType=currentNode.myProps.stageType;
                   if (stageType === "leader") {
