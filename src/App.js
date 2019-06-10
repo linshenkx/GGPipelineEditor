@@ -53,7 +53,7 @@ class App extends React.Component {
     return (
       <div className="App ">
         <GGEditor className="GGEditor">
-          { <button
+          {/* { <button
             onClick={() => {
               let anyStage = pipelineStore.createAnyStage("test");
               let post = {
@@ -105,7 +105,7 @@ class App extends React.Component {
             }}
           >
             测试
-          </button> }
+          </button> } */}
           <TopBar id="TopBar" />
           <Toolbar className="Toolbar">
             <Command name="clear" className="item">

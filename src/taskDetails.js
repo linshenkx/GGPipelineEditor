@@ -3,58 +3,65 @@ import { Input, Button, Alert, Table, Divider, Tag } from "antd";
 import jenkinsContext from "./my/util/JenkinsContext";
 import "./taskDetails.css";
 
-// const data = [
-//   {
-//     key: "1",
-//     result: this.state.result,
-//     ID: this.state.ID,
-//     shortDescription: this.state.shortDescription,
-//     duration: this.state.duration,
-//     timestamp: this.state.timestamp
-//   }
-// ];
-// const columns = [
-//   {
-//     title: "状态",
-//     dataIndex: "result",
-//     key: "result",
-//     render: result => (
-//       <Tag color={result === "SUCCESS" ? "green" : "red"} key={result}>
-//         {result.toUpperCase()}
-//       </Tag>
-//     )
-//   },
-//   {
-//     title: "ID",
-//     dataIndex: "ID",
-//     key: "ID"
-//   },
-//   {
-//     title: "触发信息",
-//     dataIndex: "shortDescription",
-//     key: "trigger"
-//   },
-//   {
-//     title: "持续时间",
-//     key: "duration",
-//     dataIndex: "duration"
-//   },
-//   {
-//     title: "执行日期",
-//     key: "timestamp",
-//     dataIndex: "timestamp"
-//   }
-// ];
+const columns = [
+  {
+    title: "状态",
+    dataIndex: "result",
+    key: "result",
+    render: result => (
+      <Tag color={result === "SUCCESS" ? "green" : "red"} key={result}>
+        {result.toUpperCase()}
+      </Tag>
+    )
+  },
+  {
+    title: "ID",
+    dataIndex: "ID",
+    key: "ID",
+    width:300
+  },
+  {
+    title: "触发信息",
+    dataIndex: "shortDescription",
+    key: "trigger",
+    width:300
 
-export default class TaskDetails extends React.Component {
-  state={
-    state:jenkinsContext.result,
-    ID:jenkinsContext.id,
-    trigger:jenkinsContext.id,
-    shortDescription:jenkinsContext.shortDescription,
-    duration:jenkinsContext.duration,
-    timestamp:jenkinsContext.timestamp,
+  },
+  {
+    title: "持续时间",
+    key: "duration",
+    dataIndex: "duration",
+    width:300
+
+  },
+  {
+    title: "执行日期",
+    key: "timestamp",
+    dataIndex: "timestamp",
+    width:300
+
   }
+];
+export default class TaskDetails extends React.Component {
+  //   const data = [
+  //   {
+  //     key: "1",
+  //     result: this.state.result,
+  //     ID: this.state.ID,
+  //     shortDescription: this.state.shortDescription,
+  //     duration: this.state.duration,
+  //     timestamp: this.state.timestamp
+  //   }
+  // ];
+
+  state = {
+    state: jenkinsContext.result,
+    ID: jenkinsContext.id,
+    trigger: jenkinsContext.id,
+    shortDescription: jenkinsContext.shortDescription,
+    duration: jenkinsContext.duration,
+    timestamp: jenkinsContext.timestamp
+  };
   componentDidMount() {
     console.log(jenkinsContext.isLogin);
   }
@@ -140,14 +147,16 @@ export default class TaskDetails extends React.Component {
             </div>
           </div>
         </div>
-        <div className="body">
-          <div className="body_left">
-            <Table
-              columnWidth={"100"}
-              // columns={columns}
-              // dataSource={data}
-              id="showTable"
-            />
+        <div className="bodyWrap">
+          <div className="body">
+            <div className="body_left">
+              <Table
+                columnWidth={"100"}
+                columns={columns}
+                // dataSource={data}
+                id="showTable"
+              />
+            </div>
           </div>
         </div>
       </div>

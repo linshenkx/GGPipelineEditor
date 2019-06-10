@@ -1,16 +1,16 @@
 #inputExpree{
-  width: 65%;
+  width: 65% !important;
   position: relative;
 }
 #inputBranch{
   width: 67%;
   position: relative;
 }
-#inputEnviKey{
-  width: 30%;
+#inputEnvKey{
+  width: 30% !important;
   position: relative;
 }
-#inputEnviKeyVal{
+#inputEnvKeyVal{
   width: 5%;
   position: absolute;
   right: 6vw;

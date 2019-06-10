@@ -2,11 +2,13 @@
   width: 100%;
   border: 1px solid red;
   height: 80px;
-  display: flex;
   justify-content: normal;
+  position: relative;
+  margin: 0 auto;
 }
 .header{
   width: 100%;
+  height: 80px;
   display: flex;
   justify-content: normal;
 }
@@ -43,13 +45,10 @@
   align-items: center;
 }
 .body{
-    position: absolute;
-    left: 20vw;
-    top: 20vh;
     display: flex;
+    margin: 0 auto;
     justify-content: space-between;
 }
-
 .left,.right{
     width: 50%;
 }
@@ -57,6 +56,9 @@
     padding-right: 20vw;
     padding-left: 50px;
 }
+.body_left{
+  margin: 0 auto;
+}
 #showTable{
-  width: 240%;
+  width: 100%;
 }
