@@ -49,6 +49,9 @@
     margin: 0 auto;
     justify-content: space-between;
 }
+.bodyWrap{
+  margin-top: 5vh;
+}
 .left,.right{
     width: 50%;
 }

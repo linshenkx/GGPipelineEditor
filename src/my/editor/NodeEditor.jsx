@@ -14,7 +14,8 @@ class NodeEditor extends React.Component{
         let itemType = item.type;
         if(itemType==='edge'){
             console.log("这里跳的");
-            return <EdgeEditor/>;
+            // return <EdgeEditor/>;
+            return <div></div>;
         }
         let {model} = item;
 

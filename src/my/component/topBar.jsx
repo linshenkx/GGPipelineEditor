@@ -149,7 +149,7 @@ class topBar extends React.Component {
   };
   taskDetails = () => {
     console.log("点击查看详情信息");
-    message.loading("请求数据中..", 0);
+    // message.loading("请求数据中..", 0);
     fetch(
       "http://149.129.127.108:9090/job/detail?jobName=git-checkout&userId=aaa"
     )
@@ -273,7 +273,7 @@ class topBar extends React.Component {
         >
           保存编辑数据
         </Button>
-        <Button
+        {/* <Button
           disabled={!jenkinsContext.isLogin}
           id="saveBtn"
           type="primary"
@@ -287,7 +287,7 @@ class topBar extends React.Component {
           size="large"
         >
           保存并运行
-        </Button>
+        </Button> */}
         <div>
           <div className="navInput">
             <Input

@@ -4,16 +4,16 @@
 #searchWrap{
   position: absolute;
   top: 2vh;
-  left: 15vw;
+  left: 20vw;
 }
 #newTask{
   position: absolute;
-  left: 30vw;
+  left: 40vw;
   top: 2vh;
 }
 #detailsBody{
   width: 90%;
-  padding-top: 15vh;
+  padding-top: 30vh;
   text-align: center;
   margin: 0 auto;
 }

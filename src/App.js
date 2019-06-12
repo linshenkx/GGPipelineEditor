@@ -15,6 +15,7 @@ import EdgeEditor from "./my/editor/EdgeEditor";
 import TopBar from "./my/component/topBar";
 import NodeEditor from "./my/editor/NodeEditor";
 import SaveButton from "./my/component/SaveButton";
+import pipelineUtil from './my/util/PipelineUtil';
 
 class App extends React.Component {
   render() {
@@ -182,7 +183,7 @@ class App extends React.Component {
               }}
               src="http://prsv4ko2y.bkt.clouddn.com/post.svg"
             />
-            功能节点
+            功能1节点
             <Item
               type="node"
               size="72*72"
@@ -252,13 +253,44 @@ class App extends React.Component {
                 // });
               }
             }}
+            onEdgeDrag={e=>{
+              console.log("拖拽边线");
+              
+            }}
+            onEdgeClick={(e) => {
+              console.log("点击边线");
+              
+            }}
+            // ---------------------------------------------------
+            onAnchorDrop={(e)=>{
+              console.log("连线结束");
+              console.log(e);
+            }}
+            // onAnchorDrag={(e)=>{
+            //   console.log("正在拖拽。。。");
+            //   console.log(e);
+            // }}
+            onAnchorDragEnd={(e)=>{
+              console.log("连线拖拽结束");
+              console.log(e);
+            }}
+            onAnchorEnter={(e)=>{
+              console.log("连线进入:");
+              console.log(e);
+            }}
+            onAnchorMouseMove={(e)=>{
+              console.log("鼠标移动");
+              console.log(e);
+              
+            }}
+            // ----------------------------------------------------
           />
           <DetailPanel>
             <NodePanel>
               <NodeEditor />
             </NodePanel>
             <EdgePanel>
-              <EdgeEditor />
+              {/* <EdgeEditor /> */}
             </EdgePanel>
           </DetailPanel>
         </GGEditor>

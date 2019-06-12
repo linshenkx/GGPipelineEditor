@@ -42,6 +42,32 @@ const columns = [
 
   }
 ];
+  const data = [
+    {
+      key: "1",
+      result: 'SUCCESS',
+      ID: 'ID',
+      shortDescription: 'Description',
+      duration: 'duration',
+      timestamp: 'timestamp'
+    },
+    {
+      key: "2",
+      result: 'SUCCESS',
+      ID: 'ID',
+      shortDescription: 'Description',
+      duration: 'duration',
+      timestamp: 'timestamp'
+    },
+    {
+      key: "3",
+      result: 'FAILURE',
+      ID: 'ID',
+      shortDescription: 'Description',
+      duration: 'duration',
+      timestamp: 'timestamp'
+    }
+  ];
 export default class TaskDetails extends React.Component {
   //   const data = [
   //   {
@@ -124,13 +150,16 @@ export default class TaskDetails extends React.Component {
           {/* 信息栏 */}
           <div className="middle">
             <div className="jobName">
-              <Alert message={jenkinsContext.jobName} type="success" />
+              {/* <Alert message={jenkinsContext.jobName} type="success" /> */}
+              <Alert message='jobName' type="success" />
             </div>
             <div className="description">
-              <Alert message={jenkinsContext.description} type="success" />
+              {/* <Alert message={jenkinsContext.description} type="success" /> */}
+              <Alert message='description' type="success" />
             </div>
             <div className="isRunning">
-              <Alert message={jenkinsContext.isRunning} type="success" />
+              {/* <Alert message={jenkinsContext.isRunning} type="success" /> */}
+              <Alert message='isRunning' type="success" />
             </div>
           </div>
           {/* 是否运行 */}
@@ -153,7 +182,7 @@ export default class TaskDetails extends React.Component {
               <Table
                 columnWidth={"100"}
                 columns={columns}
-                // dataSource={data}
+                dataSource={data}
                 id="showTable"
               />
             </div>
